@@ -1,6 +1,6 @@
 <template lang="pug">
-    el-table(border :data="config.dataSource" :loading="loading")
-        //- el-table-column(type="selection" width="55" align="center")
+    el-table(border :data="config.dataSource" :loading="loading" @selection-change="handleSelectionChange")
+        el-table-column(type="selection" width="55" align="center")
         el-table-column(v-for="(item) in config.tableConfig" :key="item.key" :prop="item.key" :label="item.title" align="center" :show-overflow-tooltip="true")
           template(slot-scope="{row,$index:index}")
             template(v-if="row[item.key]") {{row[item.key]}}
@@ -92,6 +92,9 @@ export default {
         }
     },
     methods:{
+        handleSelectionChange(val){
+          this.$emit('selection-rows-change',val)
+        },
         edit(id,row){
             this.$emit('edit',id,row)
         },

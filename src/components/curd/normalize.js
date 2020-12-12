@@ -142,14 +142,14 @@ export const tableDefaultColumnSets = [
   //   key: 'operator',
   //   title: '操作人'
   // },
-  {
-    key: 'createTime',
-    title: '创建时间'
-  },
-  {
-    key: 'updateTime',
-    title: '更新时间'
-  },
+  // {
+  //   key: 'createTime',
+  //   title: '创建时间'
+  // },
+  // {
+  //   key: 'updateTime',
+  //   title: '更新时间'
+  // },
   // {
   //   key: 'publishTime',
   //   title: '发布时间',

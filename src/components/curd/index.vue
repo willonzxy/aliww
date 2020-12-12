@@ -34,7 +34,7 @@
         el-button(:loading="btn_loading" class="add-btn" v-if="config && config.addFormConfig" size="small" type="primary" icon="el-icon-plus" @click.stop="openDialog") 新增
         el-button(class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcel") 导出
         el-button(class="add-btn" size="small" type="success" icon="el-icon-upload" @click.stop="upload_excel_dialog = true") 解析
-        Table(ref="table" :config="tableConfig" @edit="insertEntityDataReadyToEdit" @remove="remove" @log="checkLog" @pass="pass" @setTime="setPublishTime" @weight="toWeightTop")
+        Table(ref="table" :config="tableConfig" @selection-rows-change="handleSelectionChange" @edit="insertEntityDataReadyToEdit" @remove="remove" @log="checkLog" @pass="pass" @setTime="setPublishTime" @weight="toWeightTop")
         //- 分页
         Pagination(:config="paginationConfig" @size-change="onPageSizeChange" @current-change="onPageChange")
       el-dialog(:visible.sync="upload_excel_dialog" title="解析excel文件" width="520px" custom-class="fix-dialog-body")
@@ -68,6 +68,7 @@ import { exportExcelApi,parseExcelApi,exportExcelAction } from '@/api/sys.excel'
 import { mapMutations, mapState } from 'vuex'
 import dayjs from 'dayjs'
 import { recurMerge } from './form/methods/formConfigHandle'
+import XLSX from 'xlsx'
 export default {
     name:'common-curd',
     components:{
@@ -126,10 +127,36 @@ export default {
         ...mapState('system/auth', ['m_id'])
     },
     methods:{
+        handleSelectionChange(val){
+            this.selectedRows = val
+        },
         async exportExcel(){
-            let query = this.search_data || {};
-            console.log(query)
-            exportExcelAction(exportExcelApi + '?' + qs.stringify(query))
+            // let query = this.search_data || {};
+            // console.log(query)
+            // exportExcelAction(exportExcelApi + '?' + qs.stringify(query))
+            // 本地导出
+            let data = this.tableConfig.dataSource;
+            if(this.selectedRows && this.selectedRows.length){
+                data = this.selectedRows
+            }
+            if(!data.length){
+                return
+            }
+            let tableHeader = this.config.tableConfig.map(i=>i.title)
+            let xlsx = [
+                tableHeader
+            ]
+            data.forEach(i => {
+                let item = [];
+                for(let attr in i){
+                    item.push(i[attr])
+                }
+                xlsx.push(item)
+            });
+            let ws = XLSX.utils.aoa_to_sheet(xlsx);
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb,ws, "Sheet1");
+            XLSX.writeFile(wb, dayjs().format('YYYY-MM-DD HH:mm:ss')+'.xlsx');
         },
         async parseExcel(){
             
@@ -301,37 +328,41 @@ export default {
             return url
         },
         async getTableData(query){
-            let url = this.getApi(query);
-            if(!url)return
-            this.tableConfig.loading = true;
-            this.loading = true
-            let res = await _fetch({
-                url,
-                method:'get'
-            }).finally(() => {this.loading = false});
-            this.tableConfig.loading = false;
-            if(res && res.pageSize){
-                // 列表数据
-                this.paginationConfig.total = res.total;
-                let dataSource = this.config.onbeforerender ? await this.config.onbeforerender.call(this,res.data,res) : res.data;
-                this.tableConfig.dataSource = Object.freeze(dataSource);
-            }else if(res && !res.pageSize){
-                // 非列表数据
-                if(!Array.isArray(res)){
-                    if(!res.hasOwnProperty('id')){
-                        console.log(res.hasOwnProperty('id'))
-                        this.tableConfig.dataSource = []
-                        this.paginationConfig.total = 0;
-                        return
-                    }
-                    res = [res]
-                }
-                this.tableConfig.dataSource = Object.freeze(res);
-                // id 掺入了业务逻辑 哎!!!
-                res.hasOwnProperty('id') && (this.paginationConfig.total = 1);
-            }
+            // let url = this.getApi(query);
+            // if(!url)return
+            // this.tableConfig.loading = true;
+            // this.loading = true
+            // let res = await _fetch({
+            //     url,
+            //     method:'get'
+            // }).finally(() => {this.loading = false});
+            // this.tableConfig.loading = false;
+            // if(res && res.pageSize){
+            //     // 列表数据
+            //     this.paginationConfig.total = res.total;
+            //     let dataSource = this.config.onbeforerender ? await this.config.onbeforerender.call(this,res.data,res) : res.data;
+            //     this.tableConfig.dataSource = Object.freeze(dataSource);
+            // }else if(res && !res.pageSize){
+            //     // 非列表数据
+            //     if(!Array.isArray(res)){
+            //         if(!res.hasOwnProperty('id')){
+            //             this.tableConfig.dataSource = []
+            //             this.paginationConfig.total = 0;
+            //             return
+            //         }
+            //         res = [res]
+            //     }
+            //     this.tableConfig.dataSource = Object.freeze(res);
+            //     // id 掺入了业务逻辑 哎!!!
+            //     res.hasOwnProperty('id') && (this.paginationConfig.total = 1);
+            // }
             // 更新界面上显示的【数据集成接口】
-            this.$emit('search-url-update',url)
+            // this.$emit('search-url-update',url)
+            this.tableConfig.dataSource = [
+                {
+                    id:'1'
+                }
+            ]
         },
         modalClose(){
             this.$refs['form'].reset();

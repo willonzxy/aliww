@@ -6,5 +6,5 @@ const actionPrefix = '/auth'
 export const dataRecordApi = `${actionPrefix}/data-record`
 
 // 数据查询
-export const dataViewApi = `${actionPrefix}/data-view`
+// export const dataViewApi = `${actionPrefix}/data-view`
 

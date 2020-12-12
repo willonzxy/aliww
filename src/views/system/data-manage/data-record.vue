@@ -78,10 +78,12 @@ export default {
                     {
                         key:'principle',
                         title:'本金',
+                        sortable:true,
                     },
                     {
                         key:'commission',
                         title:'佣金',
+                        sortable:true,
                     },
                     {
                         key:'webChatId',
@@ -90,7 +92,15 @@ export default {
                     {
                         key:'memo',
                         title:'备注',
-                    }
+                    },
+                    {
+                        key: 'createTime',
+                        title: '创建时间'
+                    },
+                    {
+                        key: 'updateTime',
+                        title: '更新时间'
+                    },
                 ]
             }
         }
