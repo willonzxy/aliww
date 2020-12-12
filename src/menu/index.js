@@ -1,11 +1,11 @@
 import { uniqueId } from 'lodash'
 
-// 插件
-import demoPlugins from './modules/demo-plugins'
-// 组件
-import demoComponents from './modules/demo-components'
-// 功能
-import demoPlayground from './modules/demo-playground'
+// // 插件
+// import demoPlugins from './modules/demo-plugins'
+// // 组件
+// import demoComponents from './modules/demo-components'
+// // 功能
+// import demoPlayground from './modules/demo-playground'
 
 /**
  * @description 给菜单数据补充上 path 字段
@@ -24,19 +24,26 @@ function supplementPath (menu) {
 
 // 菜单 侧边栏
 export const menuAside = supplementPath([
-  demoComponents,
-  demoPlugins,
-  demoPlayground
+  {
+    path: '/index',
+    title: '首页',
+    icon: 'home',
+    children: [
+      { path: '/index/record', title: '数据录入', icon: 'database' },
+      {
+        path: '/index/dataview',
+        title: '数据查询',
+        icon: 'window-restore'
+      }
+    ]
+  }
 ])
 
 // 菜单 顶栏
 export const menuHeader = supplementPath([
-  {
-    path: '/index',
-    title: '首页',
-    icon: 'home'
-  },
-  demoPlayground,
-  demoComponents,
-  demoPlugins
+  // {
+  //   path: '/index',
+  //   title: '首页',
+  //   icon: 'home'
+  // }
 ])

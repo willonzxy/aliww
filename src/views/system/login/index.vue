@@ -15,9 +15,9 @@
         class="page-login--content"
         flex="dir:top main:justify cross:stretch box:justify">
         <div class="page-login--content-header">
-          <p class="page-login--content-header-motto">
+          <!-- <p class="page-login--content-header-motto">
             时间是一切财富中最宝贵的财富
-          </p>
+          </p> -->
         </div>
         <div
           class="page-login--content-main"
@@ -70,9 +70,9 @@
             </el-card>
             <p
               class="page-login--options"
-              flex="main:justify cross:center">
-              <span><d2-icon name="question-circle"/> 忘记密码</span>
-              <span>注册用户</span>
+              flex="main:justify cross:end">
+              <!-- <span><d2-icon name="question-circle"/> 忘记密码</span> -->
+              <!-- <span>注册用户</span> -->
             </p>
             <!-- quick login -->
             <el-button class="page-login--quick" size="default" type="info" @click="dialogVisible = true">
@@ -81,7 +81,7 @@
           </div>
         </div>
         <div class="page-login--content-footer">
-          <p class="page-login--content-footer-locales">
+          <!-- <p class="page-login--content-footer-locales">
             <a
               v-for="language in $languages"
               :key="language.value"
@@ -101,7 +101,7 @@
             <a href="#">帮助</a>
             <a href="#">隐私</a>
             <a href="#">条款</a>
-          </p>
+          </p> -->
         </div>
       </div>
     </div>
