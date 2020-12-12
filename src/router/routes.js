@@ -1,7 +1,3 @@
-import playground from './modules/playground'
-import plugins from './modules/plugins'
-import components from './modules/components'
-
 import layoutHeaderAside from '@/layout/header-aside'
 
 // 由于懒加载页面太多的话会造成webpack热更新太慢，所以开发环境不使用懒加载，只有生产环境使用懒加载
@@ -24,7 +20,27 @@ const frameIn = [
           title: '首页',
           auth: true
         },
-        component: _import('system/index')
+        component: _import('system/index'),
+        children:[
+          {
+            path:'record',
+            name:'record',
+            component: _import('system/data-manage/data-record.vue'),
+            meta: {
+              title: '数据录入',
+              auth: true
+            },
+          },
+          {
+            path:'user',
+            name:'user',
+            component: _import('system/sys-manage/user.vue'),
+            meta: {
+              title: '用户管理',
+              auth: true
+            },
+          }
+        ]
       },
       // 系统 前端日志
       // {
@@ -51,10 +67,7 @@ const frameIn = [
         component: _import('system/function/redirect')
       }
     ]
-  },
-  playground,
-  plugins,
-  components
+  }
 ]
 
 /**

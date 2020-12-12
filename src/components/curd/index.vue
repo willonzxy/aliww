@@ -23,7 +23,7 @@
         custom-class="fix-dialog-body" 
         @closed="modalClose")
         template(#title)
-            span {{`${config && config.addFormConfig && config.addFormConfig.title || (config && config.title)} ${editStatus ? '-编辑' : '-新增'}`}}
+            span {{`${config && config.addFormConfig && config.addFormConfig.title || (config && config.title)} ${editStatus ? '- 编辑' : '- 新增'}`}}
             el-tooltip(v-if="config && config.addFormConfig && config.addFormConfig.wiki" content="点击跳转到配置说明文档" effect="light" placement="right")
                 el-link(:href="config.addFormConfig.wiki" target="_blank" :underline="false")
                     i(class="mgl-10 el-icon-question")
@@ -32,15 +32,25 @@
       el-card(shadow="hover")
         el-button(class="reload-btn" v-if="config && config.reloadCache" size="small" type="success" plain icon="el-icon-refresh" @click.stop="reloadDataCache") 缓存
         el-button(:loading="btn_loading" class="add-btn" v-if="config && config.addFormConfig" size="small" type="primary" icon="el-icon-plus" @click.stop="openDialog") 新增
+        el-button(class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcel") 导出
+        el-button(class="add-btn" size="small" type="success" icon="el-icon-upload" @click.stop="upload_excel_dialog = true") 解析
         Table(ref="table" :config="tableConfig" @edit="insertEntityDataReadyToEdit" @remove="remove" @log="checkLog" @pass="pass" @setTime="setPublishTime" @weight="toWeightTop")
         //- 分页
         Pagination(:config="paginationConfig" @size-change="onPageSizeChange" @current-change="onPageChange")
-      //- 操作日志弹窗
-      el-dialog(:visible.sync="log_show" title="操作日志" width="600px" custom-class="fix-dialog-body" @closed="log_show = false")
-        LogTable(ref="logTable" :id="log_id")
-      //- 设定预发布时间弹窗
-      el-dialog(:visible.sync="pubtime_show" title="审核通过" width="380px" custom-class="fix-dialog-body" @closed="pubtime_show = false")
-        Form(ref="pubTimeForm" :config="pubTimeFormConfig" @submit="pubtimeSubmit")
+      el-dialog(:visible.sync="upload_excel_dialog" title="解析excel文件" width="520px" custom-class="fix-dialog-body")
+        el-upload(
+            class="" 
+            multiple
+            drag
+            name="excel" 
+            :with-credentials="true"
+            :action="parseExcelApi" 
+            :on-success="onUploadExcelSuccess"
+            )
+            i(class="el-icon-upload")
+            div(class="el-upload__text")
+                | 将文件拖到此处，或
+                em 点击上传
 </template>
 <script>
 import SearchBar from './search'
@@ -52,8 +62,9 @@ import qs from 'querystring'
 import _fetch from './util/fetch'
 import _URL from 'url'
 import { deep_clone } from './util'
-import LogTable from './table/logTable'
-import { checkDataApi } from '@/api/sys.public'
+// import LogTable from './table/logTable'
+// import { checkDataApi } from '@/api/sys.public'
+import { exportExcelApi,parseExcelApi,exportExcelAction } from '@/api/sys.excel'
 import { mapMutations, mapState } from 'vuex'
 import dayjs from 'dayjs'
 import { recurMerge } from './form/methods/formConfigHandle'
@@ -64,13 +75,15 @@ export default {
         Form,
         Table,
         Pagination,
-        LogTable
+        // LogTable
     },
     props:{
         config:Object
     },
     data(){
         return {
+            upload_excel_dialog:false,
+            parseExcelApi:parseExcelApi,
             btn_loading:false,
             loading: false,
             // 预发布
@@ -113,6 +126,23 @@ export default {
         ...mapState('system/auth', ['m_id'])
     },
     methods:{
+        async exportExcel(){
+            let query = this.search_data || {};
+            console.log(query)
+            exportExcelAction(exportExcelApi + '?' + qs.stringify(query))
+        },
+        async parseExcel(){
+            
+        },
+        async onUploadExcelSuccess(res){
+            this.upload_excel_dialog = false;
+            let { status , msg } = res;
+            if(status === 2 ){
+                this.$message.error(msg || '导入失败');
+            }else{
+                this.getTableData(this.search_data)
+            }
+        },
         async openDialog(){
             this.btn_loading = true
             setTimeout(()=>{
@@ -333,29 +363,29 @@ export default {
             await this.unpass(row.id)
         },
         async unpass (id) {
-          await _fetch({
-              url: `${checkDataApi}/${this.m_id}/${id}`,
-              method: 'post',
-              data: {operate: 2}
-          })
-          this.optSuccess()
+        //   await _fetch({
+        //       url: `${checkDataApi}/${this.m_id}/${id}`,
+        //       method: 'post',
+        //       data: {operate: 2}
+        //   })
+        //   this.optSuccess()
         },
         async pubtimeSubmit (params) {
-            let res = await _fetch({
-                url: `${checkDataApi}/${this.m_id}/${this.pubtime_id}`,
-                method: 'post',
-                data: {operate: 3, ...params}
-            })
-            this.pubtime_show = false
-            this.optSuccess()
+            // let res = await _fetch({
+            //     url: `${checkDataApi}/${this.m_id}/${this.pubtime_id}`,
+            //     method: 'post',
+            //     data: {operate: 3, ...params}
+            // })
+            // this.pubtime_show = false
+            // this.optSuccess()
         },
         async setPublishTime (row, time) {
-            await _fetch({
-                url: `${checkDataApi}/${this.m_id}/${row.id}`,
-                method: 'post',
-                data: { operate: 3, publishTime: time }
-            })
-            this.optSuccess()
+            // await _fetch({
+            //     url: `${checkDataApi}/${this.m_id}/${row.id}`,
+            //     method: 'post',
+            //     data: { operate: 3, publishTime: time }
+            // })
+            // this.optSuccess()
         },
         optSuccess () {
             this.$message.success('操作成功!')
@@ -379,10 +409,11 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scope>
 .add-btn {
   float: right;
   margin-bottom: 10px;
+  margin-left: 10px;
 }
 .reload-btn {
   margin-bottom: 10px;
@@ -393,5 +424,8 @@ export default {
         overflow: auto;
     }
 }
-
+.el-upload{
+    width: 100%;
+    height: 100px;
+}
 </style>

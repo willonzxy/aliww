@@ -29,11 +29,17 @@ export const menuAside = supplementPath([
     title: '首页',
     icon: 'home',
     children: [
-      { path: '/index/record', title: '数据录入', icon: 'database' },
       {
-        path: '/index/dataview',
-        title: '数据查询',
-        icon: 'window-restore'
+        title: '系统管理', icon: 'tv',
+        children:[
+          { path: '/index/user', title: '用户管理', icon: 'user' }
+        ],
+      },
+      {
+        title: '数据管理', icon: 'database',
+        children:[
+          { path: '/index/record', title: '数据录入', icon: 'pencil' }
+        ],
       }
     ]
   }
@@ -41,9 +47,5 @@ export const menuAside = supplementPath([
 
 // 菜单 顶栏
 export const menuHeader = supplementPath([
-  // {
-  //   path: '/index',
-  //   title: '首页',
-  //   icon: 'home'
-  // }
+
 ])

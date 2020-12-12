@@ -3,6 +3,9 @@ export const widget_desc = {
 }
 export default ({props,listeners,data})=>{
   const { config = {} } = props;
+  const pickerStyle = {
+    type:config.rangeType ? 'datetimerange' : 'datetime',
+  }
   const params = {
       on:listeners,
       model:data.model,
@@ -13,11 +16,11 @@ export default ({props,listeners,data})=>{
       attrs:{
           size:'small',
           editable: false,
-          clearable: false,
-          type: 'datetime',
+          clearable: true,
           format: 'yyyy-MM-dd HH:mm:ss',
           'value-format': 'yyyy-MM-dd HH:mm:ss',
-          ...config
+          ...config,
+          ...pickerStyle,
       }
   }
   return (<el-date-picker {...params}/>)

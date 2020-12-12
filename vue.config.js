@@ -79,8 +79,18 @@ module.exports = {
   publicPath: process.env.VUE_APP_PUBLIC_PATH || '/',
   lintOnSave: true,
   devServer: {
+    disableHostCheck: process.env.NODE_ENV === 'development',
     publicPath: process.env.VUE_APP_PUBLIC_PATH || '/',
-    disableHostCheck: process.env.NODE_ENV === 'development'
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:8899',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '/api': ''
+        }
+      }
+    }
   },
   css: {
     loaderOptions: {

@@ -1,7 +1,6 @@
 import copyStr from 'copy-to-clipboard';
 import { fetch as _fetch } from './util'
 import _URL from 'url'
-import { getPublicDataApi,getPublicSignApi } from '@/api/sys.public'
 import dayjs  from 'dayjs'
 import util from '@/libs/util';
 export { uploadApi } from '@/api/sys.upload'
@@ -14,20 +13,20 @@ export const form_btn_style = {
     submit:{
         type:'primary',
         label:'提交',
-        icon:''
+        icon:'el-icon-check'
     },
     reset:{
         type:'default',
-        label:'重置',
-        icon:''
+        label:'清空',
+        icon:'el-icon-delete'
     },
     searchBarResetBtn:{
         type:'default',
-        label:'重置查询条件',
-        icon:''
+        label:'清空',
+        icon:'el-icon-delete'
     },
     search:{
-        type:'default',
+        type:'primary',
         label:'查询',
         icon:'el-icon-search'
     },
@@ -116,18 +115,6 @@ export let tableGlobalDynamicActions = [
     }
 ]
 
-export async function copyUrlWithSign(_originalUrl,copy){
-    let sign_url = _originalUrl.replace('/data',getPublicSignApi)
-    let sign = await _fetch({
-        url:sign_url,
-    })
-    let { origin } = _URL.parse(_originalUrl)
-    let public_url = _originalUrl.includes('?') ? `${_originalUrl}&sign=${sign}` : `${_originalUrl}?sign=${sign}`
-    public_url = public_url.replace('/data','/api'+getPublicDataApi)
-    let result = origin ? public_url : location.origin + public_url;
-    copy && copyStr(result)
-    return result
-}
 
 /** upload handle 
  * return {
@@ -147,14 +134,14 @@ export function processUploadRes(res){
 
 // 表格的默认展示列合集
 export const tableDefaultColumnSets = [
-  {
-    key: 'id',
-    title: '数据ID'
-  },
-  {
-    key: 'operator',
-    title: '操作人'
-  },
+  // {
+  //   key: 'id',
+  //   title: '序号'
+  // },
+  // {
+  //   key: 'operator',
+  //   title: '操作人'
+  // },
   {
     key: 'createTime',
     title: '创建时间'
@@ -163,30 +150,30 @@ export const tableDefaultColumnSets = [
     key: 'updateTime',
     title: '更新时间'
   },
-  {
-    key: 'publishTime',
-    title: '发布时间',
-    width: 180,
-    auth: true
-  },
-  {
-    key: 'weight',
-    title: '权重'
-  },
-  {
-    key: 'status',
-    title: '审核状态'
-  },
+  // {
+  //   key: 'publishTime',
+  //   title: '发布时间',
+  //   width: 180,
+  //   auth: true
+  // },
+  // {
+  //   key: 'weight',
+  //   title: '权重'
+  // },
+  // {
+  //   key: 'status',
+  //   title: '审核状态'
+  // },
   // {
   //   key: 'actionLog',
   //   title: '操作日志'
   // },
-  {
-    key: 'actionReview',
-    title: '审核',
-    auth: true,
-    width: 120
-  }
+  // {
+  //   key: 'actionReview',
+  //   title: '审核',
+  //   auth: true,
+  //   width: 120
+  // }
 ]
 
 // 预发布时间FormConfig
