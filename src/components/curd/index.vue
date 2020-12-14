@@ -328,41 +328,41 @@ export default {
             return url
         },
         async getTableData(query){
-            // let url = this.getApi(query);
-            // if(!url)return
-            // this.tableConfig.loading = true;
-            // this.loading = true
-            // let res = await _fetch({
-            //     url,
-            //     method:'get'
-            // }).finally(() => {this.loading = false});
-            // this.tableConfig.loading = false;
-            // if(res && res.pageSize){
-            //     // 列表数据
-            //     this.paginationConfig.total = res.total;
-            //     let dataSource = this.config.onbeforerender ? await this.config.onbeforerender.call(this,res.data,res) : res.data;
-            //     this.tableConfig.dataSource = Object.freeze(dataSource);
-            // }else if(res && !res.pageSize){
-            //     // 非列表数据
-            //     if(!Array.isArray(res)){
-            //         if(!res.hasOwnProperty('id')){
-            //             this.tableConfig.dataSource = []
-            //             this.paginationConfig.total = 0;
-            //             return
-            //         }
-            //         res = [res]
-            //     }
-            //     this.tableConfig.dataSource = Object.freeze(res);
-            //     // id 掺入了业务逻辑 哎!!!
-            //     res.hasOwnProperty('id') && (this.paginationConfig.total = 1);
-            // }
-            // 更新界面上显示的【数据集成接口】
-            // this.$emit('search-url-update',url)
-            this.tableConfig.dataSource = [
-                {
-                    id:'1'
+            let url = this.getApi(query);
+            if(!url)return
+            this.tableConfig.loading = true;
+            this.loading = true
+            let res = await _fetch({
+                url,
+                method:'get'
+            }).finally(() => {this.loading = false});
+            this.tableConfig.loading = false;
+            if(res && res.pageSize){
+                // 列表数据
+                this.paginationConfig.total = res.total;
+                let dataSource = this.config.onbeforerender ? await this.config.onbeforerender.call(this,res.data,res) : res.data;
+                this.tableConfig.dataSource = Object.freeze(dataSource);
+            }else if(res && !res.pageSize){
+                // 非列表数据
+                if(!Array.isArray(res)){
+                    if(!res.hasOwnProperty('id')){
+                        this.tableConfig.dataSource = []
+                        this.paginationConfig.total = 0;
+                        return
+                    }
+                    res = [res]
                 }
-            ]
+                this.tableConfig.dataSource = Object.freeze(res);
+                // id 掺入了业务逻辑 哎!!!
+                res.hasOwnProperty('id') && (this.paginationConfig.total = 1);
+            }
+            //更新界面上显示的【数据集成接口】
+            this.$emit('search-url-update',url)
+            // this.tableConfig.dataSource = [
+            //     {
+            //         id:'1'
+            //     }
+            // ]
         },
         modalClose(){
             this.$refs['form'].reset();
