@@ -50,6 +50,9 @@ export function handleFormConfig(formTitle,formConfig){
         if(!item.tab_name || (item.tab_name && !item.tab_name.length)){
             item.tab_name = '基本配置项'
         }
+        if(item.disabled_on_add){
+            item.disabled = true;
+        }
         if(!tabs.includes(item.tab_name)){
             tabs.push(item.tab_name)
         }

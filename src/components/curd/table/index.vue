@@ -1,6 +1,6 @@
 <template lang="pug">
     el-table(border :data="config.dataSource" :loading="loading" @selection-change="handleSelectionChange")
-        el-table-column(type="selection" width="55" align="center")
+        //- el-table-column(type="selection" width="55" align="center")
         el-table-column(v-for="(item) in config.tableConfig" :key="item.key" :prop="item.key" :label="item.title" align="center" :show-overflow-tooltip="true")
           template(slot-scope="{row,$index:index}")
             template {{row[item.key]}}

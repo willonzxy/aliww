@@ -36,9 +36,25 @@ export default {
                                 if(this.formInline.principleB < val){
                                     this.formInline.principleB = val;
                                 }
+                            },onbeforesubmit(val){
+                                if(val === 0){
+                                    return undefined
+                                }
+                                return val
                             }},
-                        { attr:'principleB',type:'input-number',label:'本金最大值',},
-                        { attr:'commission',type:'input-number',label:'佣金',},
+                        { attr:'principleB',type:'input-number',label:'本金最大值',onbeforesubmit(val){
+                                if(val === 0){
+                                    return undefined
+                                }
+                                return val
+                            }},
+                        { attr:'commission',type:'input-number',label:'佣金',
+                        onbeforesubmit(val){
+                                if(val === 0){
+                                    return undefined
+                                }
+                                return val
+                            }},
                     ]
                 },
                 addFormConfig:{

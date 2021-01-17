@@ -5,6 +5,8 @@
 <script>
 import Curd from '@/components/curd'
 import { dataManagerApi } from '@/api/sys.data-manage.js';
+import { dataManagerApi as getUserApi } from '@/api/sys.user.js';
+import { dataManagerApi as getStoreApi } from '@/api/sys.data-store.js';
 import { deep_clone } from '@/components/curd/util';
 import { createNamespacedHelpers } from 'vuex';
 const { mapGetters } = createNamespacedHelpers('d2admin/user')
@@ -47,8 +49,9 @@ export default {
                     inline:true,
                     'label-width':'100px',
                     formConfig:[
-                        { attr:'postMan',type:'input',label:'放单人',hidden:true,disabled:true,edit_no_disabled:true},
-                        { attr:'shopName',type:'input',label:'店铺名'},
+                        { attr:'userId',type:'lazy-select',label:'放单人',api:getUserApi.select.api,dataIndex:'name',show:'name'},
+                        { attr:'storeId',type:'lazy-select',label:'店铺名',api:getStoreApi.select.api,dataIndex:'name',show:'name'},
+                        
                         { attr:'orderId',type:'input',label:'订单号'},
                         { attr:'wangwangId',type:'input',label:'旺旺号'},
                         { attr:'principleA',type:'number-input',label:'本金最小值',min:0,
@@ -58,9 +61,27 @@ export default {
                                 if(this.formInline.principleB < val){
                                     this.formInline.principleB = val;
                                 }
+                            },
+                            onbeforesubmit(val){
+                                if(val === 0){
+                                    return undefined
+                                }
+                                return val
                             }},
-                        { attr:'principleB',type:'number-input',label:'本金最大值',min:0},
+                        { attr:'principleB',type:'number-input',label:'本金最大值',min:0,
+                            onbeforesubmit(val){
+                                if(val === 0){
+                                    return undefined
+                                }
+                                return val
+                            }},
                         { attr:'commissionA',type:'number-input',label:'佣金最小值',min:0,
+                            onbeforesubmit(val){
+                                if(val === 0){
+                                    return undefined
+                                }
+                                return val
+                            },
                         change(val){
                                 let commissionB = this.formConfig.filter(i => i.attr === 'commissionB')[0];
                                 commissionB.min = val;
@@ -68,7 +89,13 @@ export default {
                                     this.formInline.commissionB = val;
                                 }
                             }},
-                        { attr:'commissionB',type:'number-input',label:'佣金最大值',min:0,},
+                        { attr:'commissionB',type:'number-input',label:'佣金最大值',min:0,
+                            onbeforesubmit(val){
+                                if(val === 0){
+                                    return undefined
+                                }
+                                return val
+                            }},
                         { attr:'weChatId',type:'input',label:'微信号'},
                         { attr:'black',type:'switch',label:'黑名单',param_type:'boolean'},
                         { attr:'createTime',type:'datetime',label:'创建时间',rangeType:true,
@@ -90,8 +117,8 @@ export default {
                     inline:false,
                     actions:['submit','reset'],
                     formConfig:[
-                        { attr:'postMan',type:'input',label:'放单人',},
-                        { attr:'storeName',type:'input',label:'店铺名'},
+                        { attr:'userId',type:'lazy-select',label:'放单人',disabled_on_add:true,api:getUserApi.select.api,dataIndex:'name',show:'name'},
+                        { attr:'storeId',type:'lazy-select',label:'店铺名',api:getStoreApi.select.api,dataIndex:'name',show:'name'},
                         { attr:'orderId',type:'input',label:'订单号'},
                         { attr:'wangwangId',type:'input',label:'旺旺号'},
                         // { attr:'principleA',type:'number-input',label:'本金最小值',min:0,

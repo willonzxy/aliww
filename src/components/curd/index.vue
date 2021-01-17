@@ -142,9 +142,9 @@ export default {
         },
         async exportExcel(){
             let data = this.tableConfig.dataSource;
-            if(this.selectedRows && this.selectedRows.length){
-                data = this.selectedRows
-            }
+            // if(this.selectedRows && this.selectedRows.length){
+            //     data = this.selectedRows
+            // }
             if(!data.length){
                 this.$message.error('数据为空')
                 return
@@ -193,9 +193,9 @@ export default {
             // console.log(res.data)
             // 本地导出
             let data = res.data;
-            if(this.selectedRows && this.selectedRows.length){
-                data = this.selectedRows
-            }
+            // if(this.selectedRows && this.selectedRows.length){
+            //     data = this.selectedRows
+            // }
             if(!data.length){
                 this.$message.error('数据为空')
                 return
@@ -239,9 +239,9 @@ export default {
             //     return this.$message.error('导出失败')
             // }
             let data = res.data;
-            if(this.selectedRows && this.selectedRows.length){
-                data = this.selectedRows
-            }
+            // if(this.selectedRows && this.selectedRows.length){
+            //     data = this.selectedRows
+            // }
             if(!data.length){
                 this.$message.error('数据为空')
                 return
@@ -362,7 +362,7 @@ export default {
             this.getTableData()
         },
         insertEntityDataReadyToEdit(_id,entity){
-            console.log(entity)
+            // console.log(_id,entity)
             this.rouseEditModal();
             // this.$nextTick(()=>{
                 
@@ -376,10 +376,16 @@ export default {
                     if(!widget_desc){
                         continue
                     }
-                    if(widget_desc.disabled_on_edit && !widget_desc.disabled){
+                    if(widget_desc.disabled_on_edit){
                         widget_desc.disabled = true;
-                        widget_desc.can_recovery_selection = true;
+                        // widget_desc.can_recovery_selection = true;
+                    }else{
+                        widget_desc.disabled = false;
                     }
+                    // if(widget_desc.edit_no_disabled){
+                    //     widget_desc.disabled = false;
+                    //     // widget_desc.can_recovery_selection = false;
+                    // }
                     temp[k] = widget_desc.onbeforeupdate ? widget_desc.onbeforeupdate.call(this.$refs['form'],entity[k],entity) : entity[k]
                 }
                 let original_form_data = Object.assign({},this.$refs['form'].originalFormInline)
@@ -408,7 +414,10 @@ export default {
                 res = await _fetch({
                     url:this.api.edit.api,
                     method:this.api.edit.m||'put',
-                    data
+                    data:{
+                        id:this.which,
+                        ...data
+                    }
                 })
             }
             // 这里需要normalize一下
@@ -498,12 +507,21 @@ export default {
             // 恢复add状态
             this.editStatus = false;
             // 恢复edit disabled的状态
-            let widget_arr = this.$refs['form'].formConfig.filter(i=>i.disabled_on_edit === true);
+            // let widget_arr = this.$refs['form'].formConfig.filter(i=>i.disabled_on_edit === true);
+            let widget_arr = this.$refs['form'].formConfig;
             for(let item of widget_arr){
-                if(item.can_recovery_selection){
-                    console.log({item})
+                //console.log(item)
+                // if(item.can_recovery_selection){
+                //     console.log({item})
+                //     item.disabled = false
+                // }
+                if(item.disabled_on_add){
+                    // console.log(item)
+                    item.disabled = true
+                }else{
                     item.disabled = false
                 }
+                
             }
         },
         checkLog (row) {
