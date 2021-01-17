@@ -50,7 +50,7 @@ export default {
                     'label-width':'100px',
                     formConfig:[
                         { attr:'userId',type:'lazy-select',label:'放单人',api:getUserApi.select.api,dataIndex:'id',show:'name'},
-                        { attr:'storeId',type:'lazy-select',label:'店铺名',api:getStoreApi.select.api,dataIndex:'id',show:'name'},
+                        { attr:'storeName',type:'input',label:'店铺名'},
                         
                         { attr:'orderId',type:'input',label:'订单号'},
                         { attr:'wangwangId',type:'input',label:'旺旺号'},
