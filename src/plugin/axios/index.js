@@ -32,7 +32,7 @@ function errorLog (error) {
     duration: 5 * 1000
   })
 }
-
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 // 创建一个 axios 实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_API,
@@ -72,13 +72,13 @@ service.interceptors.response.use(
         case 0:
           // [ 示例 ] code === 0 代表没有错误
           return dataAxios.data
-        case 'xxx':
-          // [ 示例 ] 其它和后台约定的 code
-          errorCreate(`[ code: xxx ] ${dataAxios.message || dataAxios.detail}: ${response.config.url}`)
-          break
+        // case 500:
+        //   // [ 示例 ] 其它和后台约定的 code
+        //   errorCreate(`[ code: 500 ] ${dataAxios.message || dataAxios.detail}: ${response.config.url}`)
+        //   break
         default:
           // 不是正确的 code
-          errorCreate(`${dataAxios.message || dataAxios.detail}: ${response.config.url}`)
+          errorCreate(`[code:${code}] ${response.data.msg}: ${response.config.url}`)
           break
       }
     }

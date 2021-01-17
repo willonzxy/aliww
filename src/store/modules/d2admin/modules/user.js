@@ -4,6 +4,11 @@ export default {
     // 用户信息
     info: {}
   },
+  getters:{
+    userInfo(state){
+      return state.info;
+    }
+  },
   actions: {
     /**
      * @description 设置用户数据
@@ -11,15 +16,20 @@ export default {
      * @param {*} info info
      */
     async set ({ state, dispatch }, info) {
+      // info.admin = 1;
       // store 赋值
-      state.info = info
+      state.info = {
+        ...state.info,
+        ...info,
+        admin:1
+      }
       // 持久化
-      await dispatch('d2admin/db/set', {
-        dbName: 'sys',
-        path: 'user.info',
-        value: info,
-        user: true
-      }, { root: true })
+      // await dispatch('d2admin/db/set', {
+      //   dbName: 'sys',
+      //   path: 'user.info',
+      //   value: info,
+      //   user: true
+      // }, { root: true })
     },
     /**
      * @description 从数据库取用户数据

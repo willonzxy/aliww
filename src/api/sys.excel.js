@@ -1,7 +1,9 @@
-const actionPrefix = '/auth'
+const actionPrefix = '/manager'
 
 // excel解析导入
-export const exportExcelApi = `/api${actionPrefix}/exportExcel`
+export const exportExcelApiA = `${actionPrefix}/data-downloadA`
+
+export const exportExcelApiB = `${actionPrefix}/data-downloadB`
 
 // excel导出
 export const parseExcelApi = `${actionPrefix}/parseExcel`

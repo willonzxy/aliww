@@ -31,9 +31,14 @@
       //- 数据列表
       el-card(shadow="hover")
         el-button(class="reload-btn" v-if="config && config.reloadCache" size="small" type="success" plain icon="el-icon-refresh" @click.stop="reloadDataCache") 缓存
-        el-button(:loading="btn_loading" class="add-btn" v-if="config && config.addFormConfig" size="small" type="primary" icon="el-icon-plus" @click.stop="openDialog") 新增
-        el-button(class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcel") 导出
-        el-button(class="add-btn" size="small" type="success" icon="el-icon-upload" @click.stop="upload_excel_dialog = true") 解析
+        el-button(:loading="btn_loading" class="add-btn" v-if="config && config.addFormConfig && !config.addFormConfig.disRender" size="small" type="primary" icon="el-icon-plus" @click.stop="openDialog") 新增
+        el-button(v-if="!config.ab_export" class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcel") 导出
+        template(v-else)
+            el-button(v-if="!userInfo.admin" class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcelB") 导出
+            el-button(v-if="userInfo.admin" class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcelA") 导出A端数据
+            el-button(v-if="userInfo.admin" class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcelB") 导出B端数据
+        
+        //- el-button(class="add-btn" size="small" type="success" icon="el-icon-upload" @click.stop="upload_excel_dialog = true") 解析
         Table(ref="table" :config="tableConfig" @selection-rows-change="handleSelectionChange" @edit="insertEntityDataReadyToEdit" @remove="remove" @log="checkLog" @pass="pass" @setTime="setPublishTime" @weight="toWeightTop")
         //- 分页
         Pagination(:config="paginationConfig" @size-change="onPageSizeChange" @current-change="onPageChange")
@@ -64,11 +69,13 @@ import _URL from 'url'
 import { deep_clone } from './util'
 // import LogTable from './table/logTable'
 // import { checkDataApi } from '@/api/sys.public'
-import { exportExcelApi,parseExcelApi,exportExcelAction } from '@/api/sys.excel'
-import { mapMutations, mapState } from 'vuex'
+import { exportExcelApiA,exportExcelApiB,parseExcelApi } from '@/api/sys.excel'
+import { createNamespacedHelpers} from 'vuex'
 import dayjs from 'dayjs'
 import { recurMerge } from './form/methods/formConfigHandle'
 import XLSX from 'xlsx'
+// import { createNamespacedHelpers } from 'vuex'
+const { mapGetters } = createNamespacedHelpers('d2admin/user')
 export default {
     name:'common-curd',
     components:{
@@ -124,33 +131,142 @@ export default {
         api(){
             return this.config && this.config.api;
         },
-        ...mapState('system/auth', ['m_id'])
+        // ...mapState('system/auth', ['m_id'])
+        ...mapGetters([
+            'userInfo'
+        ]),
     },
     methods:{
         handleSelectionChange(val){
             this.selectedRows = val
         },
         async exportExcel(){
-            // let query = this.search_data || {};
-            // console.log(query)
-            // exportExcelAction(exportExcelApi + '?' + qs.stringify(query))
-            // 本地导出
             let data = this.tableConfig.dataSource;
             if(this.selectedRows && this.selectedRows.length){
                 data = this.selectedRows
             }
             if(!data.length){
+                this.$message.error('数据为空')
                 return
             }
             let tableHeader = this.config.tableConfig.map(i=>i.title)
+            let tableHeaderMap = {};
+            this.config.tableConfig.forEach(i=>{
+                tableHeaderMap[i.title] = i.key
+            })
             let xlsx = [
                 tableHeader
             ]
-            data.forEach(i => {
+            data.forEach(j=>{
                 let item = [];
-                for(let attr in i){
-                    item.push(i[attr])
-                }
+                tableHeader.forEach(title=>{
+                    let key = tableHeaderMap[title];
+                    for(let attr in j){
+                        // console.log({title,key})
+                        // console.log(key)
+                        if(attr === key){
+                            item.push(j[key]);
+                        }
+                    }
+                })
+                
+                xlsx.push(item)
+            });
+            let ws = XLSX.utils.aoa_to_sheet(xlsx);
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb,ws, "Sheet1");
+            XLSX.writeFile(wb, dayjs().format('YYYY-MM-DD HH:mm:ss')+'.xlsx');
+        },
+        // 导出excel
+        async exportExcelB(){
+            // let query = this.search_data || {};
+            // console.log(query)
+            // exportExcelAction(exportExcelApi + '?' + qs.stringify(query))
+            let res = await _fetch({
+                url:exportExcelApiB,
+                method:'get'
+            })
+            // console.log(res)
+            // if(res.code!==0){
+            //     return this.$message.error('导出失败')
+            // }
+            // console.log(res.data)
+            // 本地导出
+            let data = res.data;
+            if(this.selectedRows && this.selectedRows.length){
+                data = this.selectedRows
+            }
+            if(!data.length){
+                this.$message.error('数据为空')
+                return
+            }
+            let tableHeader = this.config.tableConfig.map(i=>i.title)
+            let tableHeaderMap = {};
+            this.config.tableConfig.forEach(i=>{
+                tableHeaderMap[i.title] = i.key
+            })
+            let xlsx = [
+                tableHeader
+            ]
+            data.forEach(j=>{
+                let item = [];
+                tableHeader.forEach(title=>{
+                    let key = tableHeaderMap[title];
+                    for(let attr in j){
+                        // console.log({title,key})
+                        // console.log(key)
+                        if(attr === key){
+                            item.push(j[key]);
+                        }
+                    }
+                })
+                
+                xlsx.push(item)
+            });
+            // return
+            let ws = XLSX.utils.aoa_to_sheet(xlsx);
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb,ws, "Sheet1");
+            XLSX.writeFile(wb, dayjs().format('YYYY-MM-DD HH:mm:ss')+'.xlsx');
+            // XLSX.writeFile(wb, res.msg+'.xlsx');
+        },
+        async exportExcelA(){
+            let res = await _fetch({
+                url:exportExcelApiA,
+                method:'get'
+            })
+            // if(res.code!==0){
+            //     return this.$message.error('导出失败')
+            // }
+            let data = res.data;
+            if(this.selectedRows && this.selectedRows.length){
+                data = this.selectedRows
+            }
+            if(!data.length){
+                this.$message.error('数据为空')
+                return
+            }
+            let tableHeader = this.config.tableConfig.map(i=>i.title)
+            let tableHeaderMap = {};
+            this.config.tableConfig.forEach(i=>{
+                tableHeaderMap[i.title] = i.key
+            })
+            let xlsx = [
+                tableHeader
+            ]
+            data.forEach(j=>{
+                let item = [];
+                tableHeader.forEach(title=>{
+                    let key = tableHeaderMap[title];
+                    for(let attr in j){
+                        // console.log({title,key})
+                        // console.log(key)
+                        if(attr === key){
+                            item.push(j[key]);
+                        }
+                    }
+                })
+                
                 xlsx.push(item)
             });
             let ws = XLSX.utils.aoa_to_sheet(xlsx);
@@ -235,17 +351,18 @@ export default {
         //     this.$message.success('已复制')
         // },
         async remove(_id){
-            let url = _URL.parse(this.getApi()).pathname;
-            url = this.api.includes('${id}') ? url : /$\//.test(url) ? url+_id : url +'/'+_id;
-            console.log(url)
+            // let url = _URL.parse(this.getApi()).pathname;
+            // url = this.api.includes('${id}') ? url : /$\//.test(url) ? url+_id : url +'/'+_id;
+            // console.log(url)
             let res = await _fetch({
-                url,
-                method:'delete'
+                url:this.api.del.api + '?id='+_id,
+                method:this.api.del.m||'delete',
             })
             // this.$message.success(res.message)
             this.getTableData()
         },
         insertEntityDataReadyToEdit(_id,entity){
+            console.log(entity)
             this.rouseEditModal();
             // this.$nextTick(()=>{
                 
@@ -273,23 +390,24 @@ export default {
         },
         // 提交form表单
         async submit(data){
-            console.log(data)
-            let res,url = _URL.parse(this.getApi(data)).pathname;
+            // console.log(data)
+            let res;
+            // url = _URL.parse(this.getApi(data)).pathname;
             if(!this.editStatus){
                 // res = await _fetch.post(this.apiFmtObj.url,Object.assign({}, data, this.apiFmtObj.defaultQuery));
                 res = await _fetch({
-                    url,
-                    method:'post',
+                    url:this.api.add.api,
+                    method:this.api.add.m||'post',
                     data
                 })
             }else{
-                url = this.api.includes('${id}') ? url : /$\//.test(url) ? url+this.which : url +'/'+this.which;
+                //url = this.api.includes('${id}') ? url : /$\//.test(url) ? url+this.which : url +'/'+this.which;
                 // let qstring = qs.stringify(this.apiFmtObj.defaultQuery)
                 // if (qstring) url += `?${qstring}`
                 // res = await _fetch.put(url,data)
                 res = await _fetch({
-                    url,
-                    method:'put',
+                    url:this.api.edit.api,
+                    method:this.api.edit.m||'put',
                     data
                 })
             }
@@ -309,7 +427,7 @@ export default {
             })
         },
         getApi(query){
-            let url = this.api;
+            let url = this.api.select.api;
             query = query || this.search_data;
             if(!url){
                 console.log('getApi取不到url',query)
@@ -317,7 +435,7 @@ export default {
             }
             query = deep_clone(query)
             // 替换占位符
-            url = this.renderStrTpl(this.api,query);
+            url = this.renderStrTpl(this.api.select.api,query);
             let { pathname,query:default_query } = _URL.parse(url);
             if(Object.keys(query).length){
                 for(let k in query){
@@ -328,13 +446,14 @@ export default {
             return url
         },
         async getTableData(query){
-            let url = this.getApi(query);
-            if(!url)return
+            
+            // let url;
+            // if(!url)return
             this.tableConfig.loading = true;
             this.loading = true
             let res = await _fetch({
-                url,
-                method:'get'
+                url:this.getApi(),
+                method:this.api.select.m||'get'
             }).finally(() => {this.loading = false});
             this.tableConfig.loading = false;
             if(res && res.pageSize){
@@ -356,13 +475,23 @@ export default {
                 // id 掺入了业务逻辑 哎!!!
                 res.hasOwnProperty('id') && (this.paginationConfig.total = 1);
             }
-            //更新界面上显示的【数据集成接口】
-            this.$emit('search-url-update',url)
-            // this.tableConfig.dataSource = [
-            //     {
-            //         id:'1'
-            //     }
-            // ]
+            // //更新界面上显示的【数据集成接口】
+            // this.$emit('search-url-update',url)
+//             this.tableConfig.dataSource = [{
+// "id": 1,
+// "userId": 2,
+// "postMan": "清少",
+// "storeName": "aaa",
+// "storeId": 1,
+// "orderId": "abc1",
+// "wangwangId": "abc",
+// "weChatId": "abc",
+// "principle": 10,
+// "commission": 5,
+// "memo": null,
+// "createTime": "2021/01/09 18:47:33",
+// "black": false
+// }]
         },
         modalClose(){
             this.$refs['form'].reset();
@@ -424,18 +553,18 @@ export default {
         },
         async toWeightTop (row) {
           // debugger
-            await _fetch({
-              url: `/weightdata/${this.m_id}/${row.id}`,
-              method: 'post'
-            })
-            this.optSuccess()
+            // await _fetch({
+            //   url: `/weightdata/${this.m_id}/${row.id}`,
+            //   method: 'post'
+            // })
+            // this.optSuccess()
         },
         async reloadDataCache () {
-          await _fetch({
-            url: `/reloaddata/${this.m_id}`,
-            method: 'get'
-          })
-          this.optSuccess();
+        //   await _fetch({
+        //     url: `/reloaddata/${this.m_id}`,
+        //     method: 'get'
+        //   })
+        //   this.optSuccess();
         }
     }
 }

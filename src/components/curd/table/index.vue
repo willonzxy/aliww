@@ -3,7 +3,7 @@
         el-table-column(type="selection" width="55" align="center")
         el-table-column(v-for="(item) in config.tableConfig" :key="item.key" :prop="item.key" :label="item.title" align="center" :show-overflow-tooltip="true")
           template(slot-scope="{row,$index:index}")
-            template(v-if="row[item.key]") {{row[item.key]}}
+            template {{row[item.key]}}
         //- 默认列渲染
         template(v-if="config.defaultColumns")
           el-table-column(v-for="(item) in displayDefaultColumnSets" :width="item.width" :key="item.key" :prop="item.key" :label="item.title" align="center" :show-overflow-tooltip="true")
@@ -19,7 +19,7 @@
                 el-button(size="small" type="text" class="pass" @click="pass(row,true)") 通过
                 el-button(size="small" type="text" class="red" @click="pass(row,false)") 不通过
               template(v-else) {{row[item.key]}}
-        el-table-column(label="操作" width="150" :fixed="config.fixed === undefined ? 'right' : config.fixed" align="center")
+        el-table-column(v-if="config.actions.length" label="操作" width="150" :fixed="config.fixed === undefined ? 'right' : config.fixed" align="center")
             template(slot-scope="{row,$index:index}")
                 div(v-if="config.type === 'staticData' ")
                     el-button(v-if="showEditBtn" type="warning" size="small" @click="edit(index,row)") 编辑 

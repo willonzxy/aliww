@@ -47,7 +47,20 @@ router.beforeEach(async (to, from, next) => {
     // 请根据自身业务需要修改
     const token = util.cookies.get('token')
     if (token && token !== 'undefined') {
-      next()
+      let isAdmin = !!store.getters['d2admin/user/userInfo'].admin;
+      if(!isAdmin){
+        if(!to.matched.some(r => r.meta.admin)){
+          next()
+        }else{
+          next({
+            name: '404'
+          })
+        }
+      }else{
+        // admin 一定会通过
+        next()
+      }
+      
     } else {
       // 没有登录的时候跳转到登录界面
       // 携带上登陆成功之后需要跳转的页面完整路径

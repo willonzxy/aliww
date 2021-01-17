@@ -29,18 +29,23 @@ export const menuAside = supplementPath([
     title: '首页',
     icon: 'home',
     children: [
-      {
-        title: '系统管理', icon: 'tv',
-        children:[
-          { path: '/index/user', title: '用户管理', icon: 'user' }
-        ],
-      },
-      {
-        title: '数据管理', icon: 'database',
-        children:[
-          { path: '/index/record', title: '数据录入', icon: 'pencil' }
-        ],
-      }
+      // {
+      //   title: '系统管理', icon: 'tv',
+      //   children:[
+      //     { path: '/index/user', title: '用户管理', icon: 'user' }
+      //   ],
+      // },
+      { path: '/index/user', title: '用户管理', icon: 'user',admin:true },
+      { path: '/index/my', title: '个人信息', icon: 'vcard' },
+      // {
+      //   title: '数据管理', icon: 'database',
+      //   children:[
+      //     { path: '/index/record', title: '数据录入', icon: 'pencil' }
+      //   ],
+      // },
+      { path: '/index/record', title: '数据录入', icon: 'pencil' },
+      { path: '/index/store', title: '店铺管理', icon: 'home' },
+      { path: '/index/contract', title: '店铺协议管理', icon: 'calendar-o',admin:true}
     ]
   }
 ])

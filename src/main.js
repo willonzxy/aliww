@@ -44,9 +44,16 @@ new Vue({
       handler (matched) {
         if (matched.length > 0) {
           // console.log(matched)
-          const _side = menuAside.filter(menu => menu.path === matched[1].path)
+          let _side = menuAside.filter(menu => menu.path === matched[1].path)
           // console.log(_side)
-          this.$store.commit('d2admin/menu/asideSet', _side.length > 0 ? _side[0].children : [])
+          const info = this.$store.getters['d2admin/user/userInfo'];
+          // let power_path = 
+          // if(info.admin !== 1){
+          //   _side[0].children = _side[0].children.filter(i=>!i.admin)
+          // }
+          this.$store.commit('d2admin/menu/asideSet', _side.length > 0 ? 
+          info.admin !== 1 ? _side[0].children.filter(i=>!i.admin):
+          _side[0].children : [])
         }
       },
       immediate: true

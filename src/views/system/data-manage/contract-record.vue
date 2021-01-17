@@ -1,0 +1,94 @@
+<template lang="pug">
+    d2-container
+        Curd(ref="curd" :config="config")
+</template>
+<script>
+import Curd from '@/components/curd'
+import { dataManagerApi } from '@/api/sys.data-contract-record.js';
+import { dataManagerApi  as storeApi } from '@/api/sys.data-store.js';
+import { deep_clone } from '@/components/curd/util';
+
+export default {
+    name:'DataRecord',
+    components:{
+        Curd,
+    },
+    data(){
+        const that = this;
+        return {
+            config:{
+                defaultColumns:true,
+                api:dataManagerApi,
+                title:'店铺协议管理',
+                actions:['edit','delete'],
+
+                searchBarConfig:{
+                    btn_group_center:'center',
+                    actions:['submit','reset'],
+                    inline:true,
+                    'label-width':'100px',
+                    formConfig:[
+                        { attr:'storeId',type:'lazy-select',label:'店铺名',api:storeApi.select.api,show:'name',dataIndex:'id'},
+                        { attr:'principleA',type:'input-number',label:'本金最小值',
+                        change(val){
+                                let principleB_desc = this.formConfig.filter(i => i.attr === 'principleB')[0];
+                                principleB_desc.min = val;
+                                if(this.formInline.principleB < val){
+                                    this.formInline.principleB = val;
+                                }
+                            }},
+                        { attr:'principleB',type:'input-number',label:'本金最大值',},
+                        { attr:'commission',type:'input-number',label:'佣金',},
+                    ]
+                },
+                addFormConfig:{
+                    btn_group_center:'center',
+                    'label-width':'100px',
+                    inline:true,
+                    actions:['submit','reset'],
+                    formConfig:[
+                        { attr:'storeId',type:'lazy-select',label:'店铺名',api:storeApi.select.api,show:'name',dataIndex:'id'},
+                        { attr:'principleA',type:'input-number',label:'本金最小值',
+                        change(val){
+                                let principleB_desc = this.formConfig.filter(i => i.attr === 'principleB')[0];
+                                principleB_desc.min = val;
+                                if(this.formInline.principleB < val){
+                                    this.formInline.principleB = val;
+                                }
+                            }},
+                        { attr:'principleB',type:'input-number',label:'本金最大值',},
+                        { attr:'commission',type:'input-number',label:'佣金',},
+                        
+                    ]
+                },
+                tableConfig:[
+                    {
+                        key:'id',
+                        title:'id',
+                    },
+                    {
+                        key:'storeName',
+                        title:'店铺名',
+                    },
+                    {
+                        key:'principleA',
+                        title:'本金最小值',
+                    },
+                    {
+                        key:'principleB',
+                        title:'本金最大值',
+                    },
+                    {
+                        key:'commission',
+                        title:'佣金',
+                    },
+                    
+                ]
+            }
+        }
+    },
+    methods:{
+        
+    }
+}
+</script>

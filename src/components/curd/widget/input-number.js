@@ -12,6 +12,7 @@ export default ({props,listeners,data})=>{
         staticClass:data.staticClass,
         attrs:{
             size:'small',
+            clearable:true,
             'controls-position':"right",
             ...config
         }

@@ -77,13 +77,13 @@ keys(pages).forEach(name => {
 
 module.exports = {
   publicPath: process.env.VUE_APP_PUBLIC_PATH || '/',
-  lintOnSave: true,
+  lintOnSave: false,
   devServer: {
     disableHostCheck: process.env.NODE_ENV === 'development',
     publicPath: process.env.VUE_APP_PUBLIC_PATH || '/',
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8899',
+        target: 'http://39.107.234.80:8081',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

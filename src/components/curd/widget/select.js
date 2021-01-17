@@ -11,6 +11,8 @@ export default ({props,listeners,data})=>{
         class:data.class,
         staticClass:data.staticClass,
         attrs:{
+            filterable:true,
+            clearable:true,
             size:'small',
             ...config
         }

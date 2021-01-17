@@ -32,11 +32,40 @@ const frameIn = [
             },
           },
           {
+            path:'store',
+            name:'store',
+            component: _import('system/data-manage/store.vue'),
+            meta: {
+              title: '店铺管理',
+              auth: true
+            },
+          },
+          {
+            path:'contract',
+            name:'contract',
+            component: _import('system/data-manage/contract-record.vue'),
+            meta: {
+              title: '店铺协议管理',
+              auth: true,
+              admin:true,
+            },
+          },
+          {
             path:'user',
             name:'user',
             component: _import('system/sys-manage/user.vue'),
             meta: {
               title: '用户管理',
+              auth: true,
+              admin:true,
+            },
+          },
+          {
+            path:'my',
+            name:'my',
+            component: _import('system/sys-manage/my.vue'),
+            meta: {
+              title: '个人信息',
               auth: true
             },
           }

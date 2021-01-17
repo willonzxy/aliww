@@ -33,12 +33,12 @@
                 :rules="rules"
                 :model="formLogin"
                 size="default">
-                <el-form-item prop="username">
+                <el-form-item prop="account">
                   <el-input
                     type="text"
-                    v-model="formLogin.username"
-                    placeholder="用户名">
-                    <i slot="prepend" class="fa fa-user-circle-o"></i>
+                    v-model="formLogin.account"
+                    placeholder="账号">
+                    <i slot="prepend" class="el-icon-user"></i>
                   </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
@@ -46,10 +46,10 @@
                     type="password"
                     v-model="formLogin.password"
                     placeholder="密码">
-                    <i slot="prepend" class="fa fa-keyboard-o"></i>
+                    <i slot="prepend" class="el-icon-lock"></i>
                   </el-input>
                 </el-form-item>
-                <el-form-item prop="code">
+                <!-- <el-form-item prop="code">
                   <el-input
                     type="text"
                     v-model="formLogin.code"
@@ -58,7 +58,7 @@
                       <img class="login-code" src="./image/login-code.png">
                     </template>
                   </el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-button
                   size="default"
                   @click="submit"
@@ -75,9 +75,9 @@
               <!-- <span>注册用户</span> -->
             </p>
             <!-- quick login -->
-            <el-button class="page-login--quick" size="default" type="info" @click="dialogVisible = true">
+            <!-- <el-button class="page-login--quick" size="default" type="info" @click="dialogVisible = true">
               快速选择用户（测试功能）
-            </el-button>
+            </el-button> -->
           </div>
         </div>
         <div class="page-login--content-footer">
@@ -105,7 +105,7 @@
         </div>
       </div>
     </div>
-    <el-dialog
+    <!-- <el-dialog
       title="快速选择用户"
       :visible.sync="dialogVisible"
       width="400px">
@@ -117,7 +117,7 @@
           </div>
         </el-col>
       </el-row>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -138,32 +138,32 @@ export default {
       users: [
         {
           name: 'Admin',
-          username: 'admin',
+          account: 'admin',
           password: 'admin'
         },
         {
           name: 'Editor',
-          username: 'editor',
+          account: 'editor',
           password: 'editor'
         },
         {
           name: 'User1',
-          username: 'user1',
+          account: 'user1',
           password: 'user1'
         }
       ],
       // 表单
       formLogin: {
-        username: 'admin',
-        password: 'admin',
-        code: 'v9am'
+        account: '',
+        password: '',
+        // code: 'v9am'
       },
       // 表单校验
       rules: {
-        username: [
+        account: [
           {
             required: true,
-            message: '请输入用户名',
+            message: '请输入账号',
             trigger: 'blur'
           }
         ],
@@ -174,13 +174,13 @@ export default {
             trigger: 'blur'
           }
         ],
-        code: [
-          {
-            required: true,
-            message: '请输入验证码',
-            trigger: 'blur'
-          }
-        ]
+        // code: [
+        //   {
+        //     required: true,
+        //     message: '请输入验证码',
+        //     trigger: 'blur'
+        //   }
+        // ]
       }
     }
   },
@@ -204,7 +204,7 @@ export default {
      * @param {Object} user 用户信息
      */
     handleUserBtnClick (user) {
-      this.formLogin.username = user.username
+      this.formLogin.account = user.account
       this.formLogin.password = user.password
       this.submit()
     },
@@ -219,13 +219,18 @@ export default {
           // 注意 这里的演示没有传验证码
           // 具体需要传递的数据请自行修改代码
           this.login({
-            username: this.formLogin.username,
+            account: this.formLogin.account,
             password: this.formLogin.password
           })
             .then(() => {
               // 重定向对象不存在则返回顶层路径
-              this.$router.replace(this.$route.query.redirect || '/')
+              // console.log(this.$route.query.redirect)
+              this.$router.push(this.$route.query.redirect || '/index' )
+              // this.$router.replace('index')
             })
+            // .catch((e)=>{
+            //   console.log(e)
+            // })
         } else {
           // 登录表单校验失败
           this.$message.error('表单校验失败，请检查')

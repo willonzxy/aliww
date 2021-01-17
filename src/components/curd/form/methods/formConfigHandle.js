@@ -57,7 +57,7 @@ export function handleFormConfig(formTitle,formConfig){
         formInline[attr] = DFS(item)[attr]
     }
 
-    this.formConfig = Object.freeze(formConfig)
+    this.formConfig = formConfig
     // this.attrs = attrs;
     this.formInline = formInline;
     this.originalFormInline = deep_clone(formInline)
@@ -229,6 +229,10 @@ export async function getLazyData(attr,api){
             if(typeof api === 'function'){
                 data = await api();
             }
+            if(data.data){
+                data = data.data;
+            }
+            console.log(data)
             let widget_config = this.getFormAttrConfig(k);
             data = widget_config.onload ? await widget_config.onload.call(this,data) : data;
             widget_config.data = this.lazyData[k].data = data;
