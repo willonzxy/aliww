@@ -21,7 +21,7 @@ export default {
       state.info = {
         ...state.info,
         ...info,
-        admin:1
+        // admin:1
       }
       // 持久化
       // await dispatch('d2admin/db/set', {
