@@ -49,8 +49,8 @@ export default {
                     inline:true,
                     'label-width':'100px',
                     formConfig:[
-                        { attr:'userId',type:'lazy-select',label:'放单人',api:getUserApi.select.api,dataIndex:'name',show:'name'},
-                        { attr:'storeId',type:'lazy-select',label:'店铺名',api:getStoreApi.select.api,dataIndex:'name',show:'name'},
+                        { attr:'userId',type:'lazy-select',label:'放单人',api:getUserApi.select.api,dataIndex:'id',show:'name'},
+                        { attr:'storeId',type:'lazy-select',label:'店铺名',api:getStoreApi.select.api,dataIndex:'id',show:'name'},
                         
                         { attr:'orderId',type:'input',label:'订单号'},
                         { attr:'wangwangId',type:'input',label:'旺旺号'},
@@ -97,7 +97,7 @@ export default {
                                 return val
                             }},
                         { attr:'weChatId',type:'input',label:'微信号'},
-                        { attr:'black',type:'switch',label:'黑名单',param_type:'boolean'},
+                        { attr:'black',type:'radio',label:'黑名单',param_type:'number',data:[{value:1,label:'是'},{value:0,label:'否'}]},
                         { attr:'createTime',type:'datetime',label:'创建时间',rangeType:true,
                         'value-format':'yyyy/MM/dd HH:mm:ss',
                         format:'yyyy/MM/dd HH:mm:ss',
@@ -117,10 +117,10 @@ export default {
                     inline:false,
                     actions:['submit','reset'],
                     formConfig:[
-                        { attr:'userId',type:'lazy-select',label:'放单人',disabled_on_add:true,api:getUserApi.select.api,dataIndex:'name',show:'name'},
-                        { attr:'storeId',type:'lazy-select',label:'店铺名',api:getStoreApi.select.api,dataIndex:'name',show:'name'},
-                        { attr:'orderId',type:'input',label:'订单号'},
-                        { attr:'wangwangId',type:'input',label:'旺旺号'},
+                        { attr:'userId',type:'lazy-select',label:'放单人',disabled_on_add:true,api:getUserApi.select.api,dataIndex:'id',show:'name'},
+                        { is_required:true,attr:'storeId',type:'lazy-select',label:'店铺名',api:getStoreApi.select.api,dataIndex:'id',show:'name'},
+                        { is_required:true,attr:'orderId',type:'input',label:'订单号'},
+                        { is_required:true,attr:'wangwangId',type:'input',label:'旺旺号'},
                         // { attr:'principleA',type:'number-input',label:'本金最小值',min:0,
                         //     change(val){
                         //         let principleB_desc = this.formConfig.filter(i => i.attr === 'principleB')[0];
@@ -130,7 +130,7 @@ export default {
                         //         }
                         //     }
                         // },
-                        { attr:'principle',type:'number-input',label:'本金',min:0},
+                        { is_required:true,attr:'principle',type:'number-input',label:'本金',min:0},
                         // { attr:'commissionA',type:'number-input',label:'佣金最大值',min:0,
                         //     change(val){
                         //         let commissionB = this.formConfig.filter(i => i.attr === 'commissionB')[0];
@@ -140,9 +140,9 @@ export default {
                         //         }
                         //     }
                         // },
-                        { attr:'commission',type:'number-input',label:'佣金',min:0},
-                        { attr:'weChatId',type:'input',label:'微信号'},
-                        { attr:'black',type:'switch',label:'黑名单',param_type:'boolean'},
+                        { is_required:true,attr:'commission',type:'number-input',label:'佣金',min:0},
+                        { is_required:true,attr:'weChatId',type:'input',label:'微信号'},
+                        { is_required:true,attr:'black',type:'radio',label:'黑名单',param_type:'number',data:[{value:1,label:'是'},{value:0,label:'否'}]},
                         { attr:'memo',type:'textarea',label:'备注'},
                     ]
                 },
