@@ -142,7 +142,7 @@ export default {
                         // },
                         { is_required:true,attr:'commission',type:'number-input',label:'佣金',min:0},
                         { is_required:true,attr:'weChatId',type:'input',label:'微信号'},
-                        { is_required:true,attr:'black',type:'radio',label:'黑名单',param_type:'number',data:[{value:1,label:'是'},{value:0,label:'否'}]},
+                        { attr:'black',type:'radio',label:'黑名单',param_type:'number',data:[{value:1,label:'是'},{value:0,label:'否'}]},
                         { attr:'memo',type:'textarea',label:'备注'},
                     ]
                 },
