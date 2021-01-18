@@ -27,7 +27,7 @@ export default {
                     inline:true,
                     'label-width':'100px',
                     formConfig:[
-                        { attr:'name',type:'input',label:'中文名'},
+                        { attr:'name',type:'input',label:'昵称'},
                         { attr:'admin',type:'radio',label:'管理员',data:[{value:0,label:'否'},{value:1,label:'是'}]},
                         
                     ]

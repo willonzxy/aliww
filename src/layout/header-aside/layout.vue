@@ -14,8 +14,8 @@
           <!-- <img v-if="asideCollapse" :src="`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/icon-only.png`"> -->
           <!-- <img v-else :src="`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/all.png`"> -->
           <!-- <img src="/image/anbu-logo.png" alt="anbu-logo" srcset="" width="120px" height="60px" style=""> -->
-          <h3 v-if="!asideCollapse">安补粉丝管理系统</h3>
-          <h3 v-else>安补</h3>
+          <h3 :style="{color:themeActiveSetting.name ==='d2' || themeActiveSetting.name ==='line' ? '#333' : '#f0f0f0'}" v-if="!asideCollapse">安补粉丝管理系统</h3>
+          <h3 :style="{color:themeActiveSetting.name ==='d2' || themeActiveSetting.name ==='line'? '#333' : '#f0f0f0'}" v-else>安补</h3>
         </router-link>
         <div class="toggle-aside-btn" @click="handleToggleAside" flex-box="0">
           <d2-icon name="bars"/>
