@@ -250,7 +250,7 @@ export default {
                 this.$message.error('数据为空')
                 return
             }
-            let tableHeader = this.config.tableConfig.map(i=>i.title)
+            let tableHeader = this.config.tableConfig.filter(i=>!i.export_ignore).map(i=>i.title)
             let tableHeaderMap = {};
             this.config.tableConfig.forEach(i=>{
                 tableHeaderMap[i.title] = i.key

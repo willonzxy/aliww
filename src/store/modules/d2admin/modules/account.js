@@ -29,8 +29,9 @@ export default {
       // console.log(res)
       // const user_info = await api.getSessionInfo();
       // console.log(res)
-      util.cookies.set('uuid', res.id)
-      util.cookies.set('token', res.id + res.account)
+      var seed = (1 + Math.random()) * 1e6;
+      util.cookies.set('uuid', res.id+''+seed)
+      util.cookies.set('token', res.id+''+seed + res.account)
       // 设置 vuex 用户信息
       await dispatch('d2admin/user/set', res , { root: true })
       // 用户登录后从持久化数据加载一系列的设置

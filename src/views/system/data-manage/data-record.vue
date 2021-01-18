@@ -1,10 +1,15 @@
 <template lang="pug">
     d2-container
         Curd(ref="curd" :config="config")
-            template(#inline_btn)
-                el-button(class="add-btn" size="small" type="primary" icon="el-icon-plus" @click.stop="quick_add = true") 快速新增
-        el-dialog(:visible.sync="quick_add" title="快速新增" width="720px" custom-class="fix-dialog-body")
-            Form(ref="quick_add_form" :config="quickAddFormConfig" @submit="quick_submit")
+            //- template(#inline_btn)
+            //-     el-button(class="add-btn" size="small" type="primary" icon="el-icon-plus" @click.stop="quick_add = true") 快速新增
+            template(#searchbar-bottom)
+                el-collapse(v-model="activeNames")
+                    //- el-card(shadow="never")
+                    el-collapse-item(title="快速解析" name="quick")
+                        Form(ref="quick_add_form" :config="quickAddFormConfig" @submit="quick_submit")
+        //- el-dialog(:visible.sync="quick_add" title="快速新增" width="720px" custom-class="fix-dialog-body")
+        //-     Form(ref="quick_add_form" :config="quickAddFormConfig" @submit="quick_submit")
 </template>
 <script>
 import Curd from '@/components/curd'
@@ -44,7 +49,8 @@ export default {
     data(){
         const that = this;
         return {
-            quick_add:false,
+            activeNames:'quick',
+            // quick_add:false,
             quickAddFormConfig:{
                 title:'数据快速录入',
                 btn_group_center:'center',
@@ -52,7 +58,7 @@ export default {
                 inline:false,
                 actions:['submit','reset'],
                 formConfig:[
-                    { rows:10,attr:'str',type:'textarea',label:'数据',placeholder:'1.请以+作为分隔符\n2.解析规则：店铺名+订单号+旺旺号+本金+佣金+微信号+黑名单+备注\n3.其中店铺名请准确输入，黑名单用1为是，0为否表示\n4.支持多行同时解析，回车为一行'},
+                    { rows:5,attr:'str',type:'textarea',label:'数据',placeholder:'1.请以+作为分隔符\n2.解析规则：店铺名+订单号+旺旺号+本金+佣金+微信号+黑名单+备注\n3.其中店铺名请准确输入，黑名单用1为是，0为否表示\n4.支持多行同时解析，回车为一行'},
                 ]
             },
             config:{
@@ -172,6 +178,7 @@ export default {
                     {
                         key:'postMan',
                         title:'放单人',
+                        export_ignore:true,
                     },
                     {
                         key:'storeName',
@@ -208,10 +215,12 @@ export default {
                     {
                         key:'weChatId',
                         title:'微信号',
+                        export_ignore:true,
                     },
                     {
                         key:"black",
-                        title:"黑名单"
+                        title:"黑名单",
+                        export_ignore:true,
                     },
                     {
                         key:'memo',
@@ -219,7 +228,8 @@ export default {
                     },
                     {
                         key: 'createTime',
-                        title: '创建时间'
+                        title: '创建时间',
+                        export_ignore:true,
                     },
                     // {
                     //     key: 'updateTime',
@@ -276,7 +286,7 @@ export default {
                 let item = this.parseStr(line)
                 await this.send(item,i)
             }
-            this.quick_add = false;
+            // this.quick_add = false;
             // this.$message.success('解析完成')
             this.$refs['curd'].getTableData();
         },

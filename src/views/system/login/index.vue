@@ -23,7 +23,9 @@
           class="page-login--content-main"
           flex="dir:top main:center cross:center">
           <!-- logo -->
-          <img class="page-login--logo" src="./image/logo@2x.png">
+          <!-- <img class="page-login--logo" src="./image/logo@2x.png"> -->
+          <img class="page-login--logo" src="/image/anbu-logo.png" style="width:60px;margin-bottom:0">
+          <p>安补粉丝管理系统</p>
           <!-- form -->
           <div class="page-login--form">
             <el-card shadow="never">
