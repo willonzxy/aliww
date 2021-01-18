@@ -187,7 +187,7 @@ export default {
             // console.log(query)
             // exportExcelAction(exportExcelApi + '?' + qs.stringify(query))
             let res = await _fetch({
-                url:exportExcelApiB,
+                url:exportExcelApiB+ '?' + qs.stringify(this.search_data),
                 method:'get'
             })
             // console.log(res)
@@ -236,7 +236,7 @@ export default {
         },
         async exportExcelA(){
             let res = await _fetch({
-                url:exportExcelApiA,
+                url:exportExcelApiA + '?' + qs.stringify(this.search_data),
                 method:'get'
             })
             // if(res.code!==0){
