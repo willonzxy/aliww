@@ -27,7 +27,7 @@ export default {
                 inline:false,
                 actions:['submit'],
                 formConfig:[
-                    { attr:'name',type:'input',label:'昵称',},
+                    { attr:'name',type:'input',label:'昵称',is_required:true,},
                     { attr:'account',type:'input',label:'账号',disabled:true},
                     { attr:'password',type:'input',label:'密码',
                     showPassword:true,

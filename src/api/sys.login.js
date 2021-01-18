@@ -6,7 +6,7 @@ export const dataManagerApi = {
         api:actionPrefix + '/user-login'
     },
     logout:{
-        m:'delete',
+        m:'get',
         api:actionPrefix + '/user-logout'
     },
     getSession:{

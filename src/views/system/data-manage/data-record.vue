@@ -1,19 +1,26 @@
 <template lang="pug">
     d2-container
         Curd(ref="curd" :config="config")
+            template(#inline_btn)
+                el-button(class="add-btn" size="small" type="primary" icon="el-icon-plus" @click.stop="quick_add = true") 快速新增
+        el-dialog(:visible.sync="quick_add" title="快速新增" width="720px" custom-class="fix-dialog-body")
+            Form(ref="quick_add_form" :config="quickAddFormConfig" @submit="quick_submit")
 </template>
 <script>
 import Curd from '@/components/curd'
+import Form from '@/components/curd/form'
 import { dataManagerApi } from '@/api/sys.data-manage.js';
 import { dataManagerApi as getUserApi } from '@/api/sys.user.js';
 import { dataManagerApi as getStoreApi } from '@/api/sys.data-store.js';
 import { deep_clone } from '@/components/curd/util';
+import _fetch from '@/components/curd/util/fetch';
 import { createNamespacedHelpers } from 'vuex';
 const { mapGetters } = createNamespacedHelpers('d2admin/user')
 export default {
     name:'DataRecord',
     components:{
         Curd,
+        Form
     },
     computed:{
         ...mapGetters([
@@ -37,6 +44,17 @@ export default {
     data(){
         const that = this;
         return {
+            quick_add:false,
+            quickAddFormConfig:{
+                title:'数据快速录入',
+                btn_group_center:'center',
+                'label-width':'100px',
+                inline:false,
+                actions:['submit','reset'],
+                formConfig:[
+                    { rows:10,attr:'str',type:'textarea',label:'数据',placeholder:'1.请以+作为分隔符\n2.解析规则：店铺名+订单号+旺旺号+本金+佣金+微信号+黑名单+备注\n3.其中店铺名请准确输入，黑名单用1为是，0为否表示\n4.支持多行同时解析，回车为一行'},
+                ]
+            },
             config:{
                 // defaultColumns:true,
                 ab_export:true,
@@ -49,7 +67,7 @@ export default {
                     inline:true,
                     'label-width':'100px',
                     formConfig:[
-                        { attr:'userId',type:'lazy-select',label:'放单人',api:getUserApi.select.api,dataIndex:'id',show:'name'},
+                        { attr:'postMan',type:'input',label:'放单人'},
                         { attr:'storeName',type:'input',label:'店铺名'},
                         
                         { attr:'orderId',type:'input',label:'订单号'},
@@ -147,10 +165,10 @@ export default {
                     ]
                 },
                 tableConfig:[
-                    {
-                        key:'id',
-                        title:'id',
-                    },
+                    // {
+                    //     key:'id',
+                    //     title:'id',
+                    // },
                     {
                         key:'postMan',
                         title:'放单人',
@@ -228,7 +246,50 @@ export default {
         }
     },
     methods:{
-        
+        async send(data,index){
+            try {
+                let store_info = await _fetch({
+                    url:getStoreApi.select.api + '?name='+data.storeId,
+                });
+                console.log(store_info)
+                store_info = store_info.data[0];
+                if(!store_info || !store_info.id){
+                    this.$message.error('未找到第'+(index+1)+'行数据的店铺id,该行数据解析失败')
+                    return
+                }
+                data.storeId = store_info.id;
+                await _fetch({
+                    url:dataManagerApi.add.api,
+                    method:dataManagerApi.add.m,
+                    data
+                })
+            } catch (error) {
+                console.log(error)
+                this.$message.error('第'+(index+1)+'行解析失败')
+            }
+        },
+        async quick_submit(data){
+            console.log(data)
+            let { str } = data;
+            let rows = str.split('/n');
+            for(let [i,line] of rows.entries()){
+                let item = this.parseStr(line)
+                await this.send(item,i)
+            }
+            this.quick_add = false;
+            // this.$message.success('解析完成')
+            this.$refs['curd'].getTableData();
+        },
+        parseStr(line){
+            let raw = line.split('+');
+            let item = {};
+            let config = this.config.addFormConfig.formConfig.filter(i=>i.attr !== 'userId');
+            for(let [j,ele] of config.entries()){
+                let { attr } = ele;
+                item[attr] = raw[j]
+            }
+            return item;
+        }
     }
 }
 </script>

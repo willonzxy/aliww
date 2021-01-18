@@ -63,8 +63,9 @@ export default {
                     inline:true,
                     actions:['submit','reset'],
                     formConfig:[
-                        { attr:'storeId',type:'lazy-select',label:'店铺名',api:storeApi.select.api,show:'name',dataIndex:'id'},
+                        { is_required:true, attr:'storeId',type:'lazy-select',label:'店铺名',api:storeApi.select.api,show:'name',dataIndex:'id'},
                         { attr:'principleA',type:'input-number',label:'本金最小值',
+                        min:0,
                         change(val){
                                 let principleB_desc = this.formConfig.filter(i => i.attr === 'principleB')[0];
                                 principleB_desc.min = val;
@@ -72,16 +73,16 @@ export default {
                                     this.formInline.principleB = val;
                                 }
                             }},
-                        { attr:'principleB',type:'input-number',label:'本金最大值',},
-                        { attr:'commission',type:'input-number',label:'佣金',},
+                        { attr:'principleB',type:'input-number',label:'本金最大值',min:0,},
+                        { attr:'commission',type:'input-number',label:'佣金',min:0,},
                         
                     ]
                 },
                 tableConfig:[
-                    {
-                        key:'id',
-                        title:'id',
-                    },
+                    // {
+                    //     key:'id',
+                    //     title:'id',
+                    // },
                     {
                         key:'storeName',
                         title:'店铺名',

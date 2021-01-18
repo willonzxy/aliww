@@ -14,7 +14,7 @@ export const dataManagerApi = {
         api:actionPrefix + '/contract-edit'
     },
     del:{
-        m:'delete',
+        m:'get',
         api:actionPrefix + '/contract-del'
     }
 }

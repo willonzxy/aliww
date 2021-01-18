@@ -14,7 +14,7 @@ export const dataManagerApi = {
         api:actionPrefix + '/user-edit'
     },
     del:{
-        m:'delete',
+        m:'get',
         api:actionPrefix + '/user-del'
     }
 }

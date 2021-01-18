@@ -58,10 +58,10 @@ export default {
                     ]
                 },
                 tableConfig:[
-                    {
-                        key:'id',
-                        title:'id',
-                    },
+                    // {
+                    //     key:'id',
+                    //     title:'id',
+                    // },
                     {
                         key:'name',
                         title:'昵称',

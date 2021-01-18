@@ -32,16 +32,20 @@
       el-card(shadow="hover")
         el-button(class="reload-btn" v-if="config && config.reloadCache" size="small" type="success" plain icon="el-icon-refresh" @click.stop="reloadDataCache") 缓存
         el-button(:loading="btn_loading" class="add-btn" v-if="config && config.addFormConfig && !config.addFormConfig.disRender" size="small" type="primary" icon="el-icon-plus" @click.stop="openDialog") 新增
+        slot(name="inline_btn")
+        
+
         el-button(v-if="!config.ab_export" class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcel") 导出
         template(v-else)
             el-button(v-if="!userInfo.admin" class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcelB") 导出
-            el-button(v-if="userInfo.admin" class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcelA") 导出A端数据
-            el-button(v-if="userInfo.admin" class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcelB") 导出B端数据
+            el-button(v-if="userInfo.admin" class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcelA") 商家数据导出
+            el-button(v-if="userInfo.admin" class="add-btn" size="small" type="success" icon="el-icon-download" @click.stop="exportExcelB") 鱼塘数据导出
         
         //- el-button(class="add-btn" size="small" type="success" icon="el-icon-upload" @click.stop="upload_excel_dialog = true") 解析
         Table(ref="table" :config="tableConfig" @selection-rows-change="handleSelectionChange" @edit="insertEntityDataReadyToEdit" @remove="remove" @log="checkLog" @pass="pass" @setTime="setPublishTime" @weight="toWeightTop")
         //- 分页
         Pagination(:config="paginationConfig" @size-change="onPageSizeChange" @current-change="onPageChange")
+      
       el-dialog(:visible.sync="upload_excel_dialog" title="解析excel文件" width="520px" custom-class="fix-dialog-body")
         el-upload(
             class="" 
@@ -227,7 +231,7 @@ export default {
             let ws = XLSX.utils.aoa_to_sheet(xlsx);
             let wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb,ws, "Sheet1");
-            XLSX.writeFile(wb, dayjs().format('YYYY-MM-DD HH:mm:ss')+'.xlsx');
+            XLSX.writeFile(wb, res.fileName+'.xlsx');
             // XLSX.writeFile(wb, res.msg+'.xlsx');
         },
         async exportExcelA(){
@@ -272,7 +276,7 @@ export default {
             let ws = XLSX.utils.aoa_to_sheet(xlsx);
             let wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb,ws, "Sheet1");
-            XLSX.writeFile(wb, dayjs().format('YYYY-MM-DD HH:mm:ss')+'.xlsx');
+            XLSX.writeFile(wb, res.fileName+'.xlsx');
         },
         async parseExcel(){
             
@@ -290,6 +294,14 @@ export default {
             this.btn_loading = true
             setTimeout(()=>{
                 this.modal_show = true
+                // let default_form_data = Object.assign({},this.$refs['form'].originalFormInline)
+                // this.$refs['form'].presetFormData = default_form_data;
+            },200)
+        },
+        async openQuickAddialog(){
+            this.quick_add = true
+            setTimeout(()=>{
+                this.quick_add = true
                 // let default_form_data = Object.assign({},this.$refs['form'].originalFormInline)
                 // this.$refs['form'].presetFormData = default_form_data;
             },200)

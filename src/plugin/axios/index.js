@@ -78,7 +78,7 @@ service.interceptors.response.use(
         //   break
         default:
           // 不是正确的 code
-          errorCreate(`[code:${code}] ${response.data.msg}: ${response.config.url}`)
+          errorCreate(`${response.data.msg}`)
           break
       }
     }
