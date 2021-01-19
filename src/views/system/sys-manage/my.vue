@@ -57,7 +57,7 @@ export default {
                     ...this.user_info,
                     ...data,
                 };
-            console.log(data)
+            // console.log(data)
             delete data.account;
             let res = await _fetch({
                 url:dataManagerApi.edit.api,
@@ -72,8 +72,8 @@ export default {
         getInfo(){
             api.getSessionInfo()
             .then(res=>{
-                console.log(deep_clone(res))
-                console.log({res})
+                // console.log(deep_clone(res))
+                // console.log({res})
                 this.user_info = deep_clone(res);
                 this.setUserInfo(deep_clone(res))
                 this.appendInfo(deep_clone(res))

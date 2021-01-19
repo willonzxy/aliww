@@ -7,6 +7,7 @@ import 'nprogress/nprogress.css'
 
 import store from '@/store/index'
 import util from '@/libs/util.js'
+import api from '@/api'
 
 // 路由数据
 import routes from './routes'
@@ -32,6 +33,7 @@ const router = new VueRouter({
  * 路由拦截
  * 权限验证
  */
+let hadVerfiy = false;
 router.beforeEach(async (to, from, next) => {
   // 确认已经加载多标签页数据 https://github.com/d2-projects/d2-admin/issues/201
   await store.dispatch('d2admin/page/isLoaded')
@@ -47,6 +49,24 @@ router.beforeEach(async (to, from, next) => {
     // 请根据自身业务需要修改
     const token = util.cookies.get('token')
     if (token && token !== 'undefined') {
+      if(!hadVerfiy){
+        // console.log(getSessionInfo)
+        let userInfo = {};
+        try {
+          userInfo = await api.getSessionInfo();
+          hadVerfiy = true;
+          if(userInfo){
+            store.dispatch('d2admin/user/set', userInfo , { root: true })
+          }
+        } catch (error) {
+          next({
+            name: 'login',
+            query: {
+              redirect: to.fullPath
+            }
+          })
+        }
+      }
       let isAdmin = !!store.getters['d2admin/user/userInfo'].admin;
       if(!isAdmin){
         if(!to.matched.some(r => r.meta.admin)){

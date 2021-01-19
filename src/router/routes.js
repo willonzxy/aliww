@@ -22,10 +22,19 @@ const frameIn = [
         },
         component: _import('system/index'),
         children:[
+          // {
+          //   path:'data-manage',
+          //   name:'data-manage',
+          //   component: _import('system/data-manage/data-record.vue'),
+          //   meta: {
+          //     title: '数据管理',
+          //     auth: true
+          //   },
+          // },
           {
-            path:'record',
-            name:'record',
-            component: _import('system/data-manage/data-record.vue'),
+            path:'data-record',
+            name:'data-record',
+            component: _import('system/data-manage/data-record-2.vue'),
             meta: {
               title: '数据录入',
               auth: true
