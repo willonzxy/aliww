@@ -43,7 +43,7 @@ export const menuAside = supplementPath([
       //     { path: '/index/record', title: '数据录入', icon: 'pencil' }
       //   ],
       // },
-      // { path: '/index/data-manage', title: '数据管理', icon: 'bank' },
+      { path: '/index/data-manage', title: '数据管理', icon: 'bank' },
       { path: '/index/data-record', title: '数据录入', icon: 'pencil' },
       { path: '/index/store', title: '店铺管理', icon: 'home' },
       { path: '/index/contract', title: '店铺协议管理', icon: 'calendar-o',admin:true}

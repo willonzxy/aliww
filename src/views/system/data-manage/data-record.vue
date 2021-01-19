@@ -121,7 +121,7 @@ export default {
                                 return val
                             }},
                         { attr:'weChatId',type:'input',label:'微信号'},
-                        { attr:'black',type:'radio',label:'黑名单',param_type:'number',data:[{value:1,label:'是'},{value:0,label:'否'}]},
+                        { attr:'black',type:'radio',label:'黑名单',value:'',data:[{value:1,label:'是'},{value:0,label:'否'},{value:'',label:'默认'}]},
                         { attr:'createTime',type:'datetime',label:'创建时间',rangeType:true,
                         'value-format':'yyyy/MM/dd HH:mm:ss',
                         format:'yyyy/MM/dd HH:mm:ss',
