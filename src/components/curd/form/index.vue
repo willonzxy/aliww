@@ -1,5 +1,5 @@
 <template lang="pug">
-    el-form(:inline="config.inline || false" :model="formInline" :label-width="config['label-width']" :label-position="config['label-position'] || 'right'" :ref="config.title")
+    el-form(:inline="config.inline || false" :model="formInline" :label-width="config['label-width']" :label-position="config['label-position'] || 'right'" :ref="config.title" @submit.native.prevent)
         //- 有tab
         el-tabs(v-if="!config.collapse && tabs.length > 1" v-model="activityTab")
             el-tab-pane( v-for="(tab_name,tab_index) in tabs" :label="tab_name" :name="`${tab_index}`" :key="tab_index")
@@ -37,7 +37,7 @@
         //- 按钮组
         span(:class="config.btn_group_center ? 'btn-group-center' : '' " :style="{'justify-content':config.btn_group_center, 'margin-top': '20px'}")
             el-form-item(v-if="config.actions.length")
-                el-button(v-if="config.actions.includes('submit')" size="small" @click.stop="submit" :type="btn_style.submit.type" :icon="btn_style.submit.icon") {{btn_style.submit.label}}
+                el-button(v-if="config.actions.includes('submit')" size="small" @click.stop="submit" native-type="submit" :type="btn_style.submit.type" :icon="btn_style.submit.icon") {{btn_style.submit.label}}
                 el-button(v-if="config.actions.includes('reset')" size="small" @click.stop="reset" :type="btn_style.reset.type" :icon="btn_style.reset.icon") {{btn_style.reset.label}}
             el-form-item(v-if="dynamicActions.length")
                 span(v-for="{type,label,icon,size,handler,show_condition} in dynamicActions" :key="label")

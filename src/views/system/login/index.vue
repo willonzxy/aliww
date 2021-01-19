@@ -30,6 +30,7 @@
           <div class="page-login--form">
             <el-card shadow="never">
               <el-form
+              @submit.native.prevent
                 ref="loginForm"
                 label-position="top"
                 :rules="rules"
@@ -39,7 +40,8 @@
                   <el-input
                     type="text"
                     v-model="formLogin.account"
-                    placeholder="账号">
+                    placeholder="账号"
+                    >
                     <i slot="prepend" class="el-icon-user"></i>
                   </el-input>
                 </el-form-item>
@@ -47,7 +49,8 @@
                   <el-input
                     type="password"
                     v-model="formLogin.password"
-                    placeholder="密码">
+                    placeholder="密码"
+                    >
                     <i slot="prepend" class="el-icon-lock"></i>
                   </el-input>
                 </el-form-item>
@@ -65,6 +68,7 @@
                   size="default"
                   @click="submit"
                   type="primary"
+                  native-type="submit"
                   class="button-login">
                   登录
                 </el-button>

@@ -7,10 +7,10 @@
                 //- el-collapse(v-model="activeNames")
                 //-     //- el-card(shadow="never")
                 //-     el-collapse-item(title="快速解析" name="quick")
-                Form(ref="form" :config="addFormConfig")
+                Form(ref="form" :config="addFormConfig" @keyup.enter.native="submit")
                 Form(ref="quick_add_form" :config="quickAddFormConfig" @submit="parseStrToAddForm")
                 div(style="text-align:center")
-                    el-button(type="primary" icon="el-icon-check" size="small" @click="submit") 提交
+                    el-button(type="primary" icon="el-icon-check" size="small"  @click="submit") 提交
                     el-button(icon="el-icon-delete" size="small") 清空
         //- el-dialog(:visible.sync="quick_add" title="快速新增" width="720px" custom-class="fix-dialog-body")
         //-     Form(ref="quick_add_form" :config="quickAddFormConfig" @submit="parseStrToAddForm")
@@ -62,7 +62,7 @@ export default {
                 inline:false,
                 actions:[],
                 formConfig:[
-                    { rows:4,change_submit:true, attr:'str',type:'textarea',label:'数据解析',placeholder:'1.请以+作为分隔符\n2.解析规则：店铺名+订单号+旺旺号+本金+佣金+微信号+黑名单+备注\n3.其中店铺名支持模糊匹配，而黑名单请用1或0表示'},
+                    { rows:4,change_submit:true, attr:'str',type:'textarea',label:'数据解析',placeholder:'1.请以+作为分隔符\n2.解析规则：店铺名+订单号+旺旺号+本金+佣金+微信号+黑名单+备注\n3.其中店铺名支持模糊匹配，而黑名单请用1或0表示\n4.此输入框失焦后，稍等片刻数据就会提交到上面的表单'},
                 ]
             },
             addFormConfig:{
