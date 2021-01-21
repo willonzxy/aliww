@@ -6,6 +6,7 @@
 import Curd from '@/components/curd'
 import { dataManagerApi } from '@/api/sys.user.js';
 import { deep_clone } from '@/components/curd/util';
+import { numAndEn } from '@/components/curd/form/rule.js'
 import jsMd5 from 'js-md5'
 export default {
     name:'DataRecord',
@@ -38,7 +39,7 @@ export default {
                     inline:false,
                     actions:['submit','reset'],
                     formConfig:[
-                        { attr:'account',type:'input',label:'账号',placeholder:"用于登录的账号名",'min':6,is_required:true},
+                        { attr:'account',type:'input',label:'账号',placeholder:"用于登录的账号名",is_required:true,rules:[numAndEn]},
                         { attr:'name',type:'input',label:'昵称',placeholder:"昵称",is_required:true},
                         { 
                             attr:'password',type:'input',label:'密码','min':6,

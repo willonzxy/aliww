@@ -56,6 +56,15 @@ export function handleFormConfig(formTitle,formConfig){
         if(!tabs.includes(item.tab_name)){
             tabs.push(item.tab_name)
         }
+        if(item.is_required){
+            if(!item.rules){
+                item.rules = [required]
+            }else{
+               // console.log(item.rules[0])
+                item.rules.push(required)
+            }
+        }
+        //console.log(item.rules[0])
         // 深度遍历，组织出基础的数据结构
         formInline[attr] = DFS(item)[attr]
     }
@@ -102,13 +111,13 @@ function DFS(item,prevVal = {},depth = 0,root,_index = 0){
         item.attr = '_$$_' + ~~((1+Math.random()) * 1e6) + depth
         data = handleInArray(prevVal,param_type,value,type,_index)
     }
-    if(item.is_required){
-        if(!item.rules){
-            item.rules = [required]
-        }else{
-            item.rules.push(required)
-        }
-    }
+    // if(item.is_required){
+    //     if(!item.rules){
+    //         item.rules = [required]
+    //     }else{
+    //         item.rules.push(required)
+    //     }
+    // }
     // 记录层级深度，方便着色
     item.internal_depth = depth
 
@@ -169,6 +178,16 @@ export function attrValueChange(attr, val) {
         return
     }
     let func = desc_obj.change || desc_obj.onchange;
+    func && func.call(this,val);
+}
+
+export function attrSelectChange(attr, val) {
+    // let value = this.formInline[attr];
+    let desc_obj = this.formConfig.filter(i => i.attr === attr)[0];
+    if(!desc_obj){
+        return
+    }
+    let func = desc_obj.select || desc_obj.onselect;
     func && func.call(this,val);
 }
 

@@ -129,6 +129,7 @@
                         v-model="formInline[widget_config.attr]"
                         :uploadUrl.sync="formInline[widget_config.attr]"
                         @change="attrValueChange(widget_config.attr,$event)" 
+                        @select="attrSelectChange(widget_config.attr,$event)" 
                         :on-success="(res)=>{onUploadSuccess(widget_config.attr,res)}" 
                         :on-error="onUploadError"
                         :before-upload="(file)=>{return beforeUpload(widget_config.attr,file)}"

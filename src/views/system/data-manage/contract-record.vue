@@ -7,7 +7,7 @@ import Curd from '@/components/curd'
 import { dataManagerApi } from '@/api/sys.data-contract-record.js';
 import { dataManagerApi  as storeApi } from '@/api/sys.data-store.js';
 import { deep_clone } from '@/components/curd/util';
-
+import _fetch from '@/components/curd/util/fetch';
 export default {
     name:'DataRecord',
     components:{
@@ -28,7 +28,17 @@ export default {
                     inline:true,
                     'label-width':'100px',
                     formConfig:[
-                        { attr:'storeId',type:'lazy-select',label:'店铺名',api:storeApi.select.api,show:'name',dataIndex:'id'},
+                        { attr:'storeId',type:'autocomplete',label:'店铺名',
+                        'trigger-on-focus':true,
+                        async fetchSuggestions(qstring,cb){
+                            let res = await _fetch(`${storeApi.select.api}?name=${qstring}`)
+                            cb(res.data.map(i=>({value:i.name})))
+                        },
+                        async onbeforesubmit(val){
+                            let res = await _fetch(`${storeApi.select.api}?name=${val}`)
+                            res = res.data[0].id;
+                            return res;
+                        }},
                         { attr:'principleA',type:'input-number',label:'本金最小值',
                         change(val){
                                 let principleB_desc = this.formConfig.filter(i => i.attr === 'principleB')[0];
@@ -63,7 +73,20 @@ export default {
                     inline:true,
                     actions:['submit','reset'],
                     formConfig:[
-                        { is_required:true, attr:'storeId',type:'lazy-select',label:'店铺名',api:storeApi.select.api,show:'name',dataIndex:'id'},
+                        { is_required:true,attr:'storeId',type:'autocomplete',label:'店铺名',
+                        'trigger-on-focus':true,
+                        async fetchSuggestions(qstring,cb){
+                            let res = await _fetch(`${storeApi.select.api}?name=${qstring}`)
+                            cb(res.data.map(i=>({value:i.name})))
+                        },
+                        async onbeforesubmit(val){
+                            let res = await _fetch(`${storeApi.select.api}?name=${val}`)
+                            res = res.data[0];
+                            if(res === undefined){
+                                this.$message.error('未找到相关店铺信息，添加失败')
+                            }
+                            return res.id;
+                        }},
                         { attr:'principleA',type:'input-number',label:'本金最小值',
                         min:0,
                         change(val){

@@ -11,7 +11,7 @@
                 Form(ref="quick_add_form" :config="quickAddFormConfig" @submit="parseStrToAddForm")
                 div(style="text-align:center")
                     el-button(type="primary" icon="el-icon-check" size="small"  @click="submit") 提交
-                    el-button(icon="el-icon-delete" size="small") 清空
+                    el-button(icon="el-icon-delete" size="small" @click="resetAllForm") 清空
         //- el-dialog(:visible.sync="quick_add" title="快速新增" width="720px" custom-class="fix-dialog-body")
         //-     Form(ref="quick_add_form" :config="quickAddFormConfig" @submit="parseStrToAddForm")
 </template>
@@ -73,7 +73,20 @@ export default {
                     actions:[],
                     formConfig:[
                         // { attr:'userId',type:'lazy-select',label:'放单人',disabled_on_add:true,api:getUserApi.select.api,dataIndex:'id',show:'name'},
-                        { is_required:true,attr:'storeId',type:'lazy-select',label:'店铺名',api:getStoreApi.select.api,dataIndex:'id',show:'name'},
+                        { is_required:true,attr:'storeId',type:'autocomplete',label:'店铺名',
+                        'trigger-on-focus':true,
+                        async fetchSuggestions(qstring,cb){
+                            let res = await _fetch(`${getStoreApi.select.api}?name=${qstring}`)
+                            cb(res.data.map(i=>({value:i.name})))
+                        },
+                        async onbeforesubmit(val){
+                            let res = await _fetch(`${getStoreApi.select.api}?name=${val}`)
+                            res = res.data[0];
+                            if(res === undefined){
+                                this.$message.error('未找到相关店铺信息，添加失败')
+                            }
+                            return res.id;
+                        }},
                         { is_required:true,attr:'orderId',type:'input',label:'订单号'},
                         { is_required:true,attr:'wangwangId',type:'input',label:'旺旺号'},
                         // { attr:'principleA',type:'number-input',label:'本金最小值',min:0,
@@ -262,6 +275,10 @@ export default {
         }
     },
     methods:{
+        resetAllForm(){
+            this.$refs['form'].reset();
+            this.$refs['quick_add_form'].reset();
+        },
         async submit(){
             try {
                 let data = this.$refs['form'].formInline;

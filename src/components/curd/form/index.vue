@@ -31,6 +31,7 @@
             :formConfig="formConfig" 
             :formInline.sync="formInline" 
             @change="attrValueChange" 
+            @select="attrSelectChange" 
             @array-change="attrArrayValueChange" 
             @object-array-change="attrObjectArrayValueChange" 
             @object-change="attrObjectValueChange")

@@ -410,6 +410,7 @@ export default {
         async submit(data){
             // console.log(data)
             let res;
+            // console.log(data)
             // url = _URL.parse(this.getApi(data)).pathname;
             if(!this.editStatus){
                 // res = await _fetch.post(this.apiFmtObj.url,Object.assign({}, data, this.apiFmtObj.defaultQuery));

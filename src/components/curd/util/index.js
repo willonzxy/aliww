@@ -14,5 +14,5 @@ function deep_clone(obj){
 }
 
 function isObject(o){
-    return typeof o !== null && typeof o === 'object'
+    return Array.isArray(o) || Object.prototype.toString.call(o) === '[object Object]'
 }

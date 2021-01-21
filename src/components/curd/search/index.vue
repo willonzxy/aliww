@@ -1,5 +1,5 @@
 <template lang="pug">
-    Form(:config="searchConfig" @submit="search" class="btn-inline")
+    Form(ref="searchForm" :config="searchConfig" @submit="search" class="btn-inline")
         slot
 </template>
 <script>

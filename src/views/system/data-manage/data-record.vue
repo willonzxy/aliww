@@ -121,7 +121,7 @@ export default {
                                 return val
                             }},
                         { attr:'weChatId',type:'input',label:'微信号'},
-                        { attr:'black',type:'radio',label:'黑名单',value:'',data:[{value:1,label:'是'},{value:0,label:'否'},{value:'',label:'默认'}]},
+                        { attr:'black',type:'radio',label:'黑名单',data:[{value:1,label:'是'},{value:0,label:'否'}]},
                         { attr:'createTime',type:'datetime',label:'创建时间',rangeType:true,
                         'value-format':'yyyy/MM/dd HH:mm:ss',
                         format:'yyyy/MM/dd HH:mm:ss',
@@ -142,7 +142,20 @@ export default {
                     actions:['submit','reset'],
                     formConfig:[
                         { attr:'userId',type:'lazy-select',label:'放单人',disabled_on_add:true,api:getUserApi.select.api,dataIndex:'id',show:'name'},
-                        { is_required:true,attr:'storeId',type:'lazy-select',label:'店铺名',api:getStoreApi.select.api,dataIndex:'id',show:'name'},
+                        { is_required:true,attr:'storeId',type:'autocomplete',label:'店铺名',
+                        'trigger-on-focus':true,
+                        async fetchSuggestions(qstring,cb){
+                            let res = await _fetch(`${getStoreApi.select.api}?name=${qstring}`)
+                            cb(res.data.map(i=>({value:i.name})))
+                        },
+                        async onbeforesubmit(val){
+                            let res = await _fetch(`${getStoreApi.select.api}?name=${val}`)
+                            res = res.data[0];
+                            if(res === undefined){
+                                this.$message.error('未找到相关店铺信息，添加失败')
+                            }
+                            return res.id;
+                        }},
                         { is_required:true,attr:'orderId',type:'input',label:'订单号'},
                         { is_required:true,attr:'wangwangId',type:'input',label:'旺旺号'},
                         // { attr:'principleA',type:'number-input',label:'本金最小值',min:0,

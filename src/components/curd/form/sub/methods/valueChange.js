@@ -1,6 +1,9 @@
 export function attrValueChange(attr,val){
     this.$emit('change',attr,val)
 }
+export function attrSelectChange(attr,val){
+    this.$emit('select',attr,val)
+}
 export function attrObjectValueChange(attr,inner_attr,val){
     this.$emit('object-change',attr,inner_attr,val)
 }
