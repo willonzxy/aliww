@@ -5,7 +5,7 @@
 <script>
 import Curd from '@/components/curd'
 import { dataManagerApi } from '@/api/sys.data-contract-record.js';
-import { dataManagerApi  as storeApi } from '@/api/sys.data-store.js';
+import { dataManagerApi  as getStoreApi } from '@/api/sys.data-store.js';
 import { deep_clone } from '@/components/curd/util';
 import _fetch from '@/components/curd/util/fetch';
 export default {
@@ -28,17 +28,19 @@ export default {
                     inline:true,
                     'label-width':'100px',
                     formConfig:[
-                        { attr:'storeId',type:'autocomplete',label:'店铺名',
-                        'trigger-on-focus':true,
-                        async fetchSuggestions(qstring,cb){
-                            let res = await _fetch(`${storeApi.select.api}?name=${qstring}`)
-                            cb(res.data.map(i=>({value:i.name})))
-                        },
-                        async onbeforesubmit(val){
-                            let res = await _fetch(`${storeApi.select.api}?name=${val}`)
-                            res = res.data[0].id;
-                            return res;
+                        { attr:'storeId',type:'select',label:'店铺名',
+                        placeholder:'支持键入搜索',
+                        show:'name',dataIndex:'id',
+                        remote:true,
+                        async remoteMethod(qstring){
+                            console.log(qstring)
+                            let res = await _fetch(`${getStoreApi.select.api}?name=${qstring}`)
+                            let index = that.config.searchBarConfig.formConfig.findIndex(i=>i.attr === 'storeId')
+                            let config = deep_clone(that.config.searchBarConfig.formConfig[index]);
+                            config.data = res.data;
+                            that.config.searchBarConfig.formConfig.splice(index,1,config)
                         }},
+                        // {attr:'storeName',type:'input',label:'店铺名'},
                         { attr:'principleA',type:'input-number',label:'本金最小值',
                         change(val){
                                 let principleB_desc = this.formConfig.filter(i => i.attr === 'principleB')[0];
@@ -73,20 +75,19 @@ export default {
                     inline:true,
                     actions:['submit','reset'],
                     formConfig:[
-                        { is_required:true,attr:'storeId',type:'autocomplete',label:'店铺名',
-                        'trigger-on-focus':true,
-                        async fetchSuggestions(qstring,cb){
-                            let res = await _fetch(`${storeApi.select.api}?name=${qstring}`)
-                            cb(res.data.map(i=>({value:i.name})))
-                        },
-                        async onbeforesubmit(val){
-                            let res = await _fetch(`${storeApi.select.api}?name=${val}`)
-                            res = res.data[0];
-                            if(res === undefined){
-                                this.$message.error('未找到相关店铺信息，添加失败')
-                            }
-                            return res.id;
+                        {is_required:true,attr:'storeId',type:'select',label:'店铺名',
+                        placeholder:'支持键入搜索',
+                        show:'name',dataIndex:'id',
+                        remote:true,
+                        async remoteMethod(qstring){
+                            let res = await _fetch(`${getStoreApi.select.api}?name=${qstring}`)
+                            let index = that.config.addFormConfig.formConfig.findIndex(i=>i.attr === 'storeId')
+                            let config = deep_clone(that.config.addFormConfig.formConfig[index]);
+                            config.data = res.data;
+                            //that.$refs['curd'].$refs['form'].formConfig.splice(index,1,config)
+                            that.config.addFormConfig.formConfig.splice(index,1,config)
                         }},
+                       // {attr:'storeName',type:'input',label:'店铺名'},
                         { attr:'principleA',type:'input-number',label:'本金最小值',
                         min:0,
                         change(val){

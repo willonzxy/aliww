@@ -24,12 +24,12 @@ export default {
         // admin:1
       }
       // 持久化
-      // await dispatch('d2admin/db/set', {
-      //   dbName: 'sys',
-      //   path: 'user.info',
-      //   value: info,
-      //   user: true
-      // }, { root: true })
+      await dispatch('d2admin/db/set', {
+        dbName: 'sys',
+        path: 'user.info',
+        value: state.info,
+        user: true
+      }, { root: true })
     },
     /**
      * @description 从数据库取用户数据

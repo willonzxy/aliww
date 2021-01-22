@@ -73,19 +73,12 @@ export default {
                     actions:[],
                     formConfig:[
                         // { attr:'userId',type:'lazy-select',label:'放单人',disabled_on_add:true,api:getUserApi.select.api,dataIndex:'id',show:'name'},
-                        { is_required:true,attr:'storeId',type:'autocomplete',label:'店铺名',
-                        'trigger-on-focus':true,
-                        async fetchSuggestions(qstring,cb){
-                            let res = await _fetch(`${getStoreApi.select.api}?name=${qstring}`)
-                            cb(res.data.map(i=>({value:i.name})))
-                        },
-                        async onbeforesubmit(val){
-                            let res = await _fetch(`${getStoreApi.select.api}?name=${val}`)
-                            res = res.data[0];
-                            if(res === undefined){
-                                this.$message.error('未找到相关店铺信息，添加失败')
-                            }
-                            return res.id;
+                        { is_required:true,attr:'storeId',type:'select',label:'店铺名',
+                        show:'name',dataIndex:'id',
+                        placeholder:'支持键入搜索',
+                        remote:true,
+                        async remoteMethod(qstring){
+                            that.refreshStoreNameSelectData(qstring);
                         }},
                         { is_required:true,attr:'orderId',type:'input',label:'订单号'},
                         { is_required:true,attr:'wangwangId',type:'input',label:'旺旺号'},
@@ -275,6 +268,14 @@ export default {
         }
     },
     methods:{
+        async refreshStoreNameSelectData(qstring){
+            let res = await _fetch(`${getStoreApi.select.api}?name=${qstring}`)
+            let index = this.addFormConfig.formConfig.findIndex(i=>i.attr === 'storeId')
+            let config = deep_clone(this.addFormConfig.formConfig[index]);
+            config.data = res.data;
+            // this.$refs['form'].formConfig.splice(index,1,config);
+            this.addFormConfig.formConfig.splice(index,1,config)
+        },
         resetAllForm(){
             this.$refs['form'].reset();
             this.$refs['quick_add_form'].reset();
@@ -327,9 +328,10 @@ export default {
                 item = this.parseStr(line)
                 // await this.send(item,i)
             }
+            await this.refreshStoreNameSelectData(item.storeId)
             await this.changeStoreIdByName(item)
-            console.log(item)
-            item.black = +item.black
+            item.black = +item.black;
+            
             // this.quick_add = false;
             // this.$message.success('解析完成')
             this.$refs['form'].presetFormData = item;

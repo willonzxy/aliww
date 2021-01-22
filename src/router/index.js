@@ -56,6 +56,7 @@ router.beforeEach(async (to, from, next) => {
           userInfo = await api.getSessionInfo();
           hadVerfiy = true;
           if(userInfo){
+           // console.log(userInfo)
             store.dispatch('d2admin/user/set', userInfo , { root: true })
           }
         } catch (error) {

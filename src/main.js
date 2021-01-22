@@ -46,13 +46,18 @@ new Vue({
           // console.log(matched)
           let _side = menuAside.filter(menu => menu.path === matched[1].path)
           // console.log(_side)
-          const info = this.$store.getters['d2admin/user/userInfo'];
+          let info;
+          try {
+            info = this.$store.getters['d2admin/user/userInfo']
+          } catch (error) {
+            console.log(error)
+          }
           // let power_path = 
           // if(info.admin !== 1){
           //   _side[0].children = _side[0].children.filter(i=>!i.admin)
           // }
           this.$store.commit('d2admin/menu/asideSet', _side.length > 0 ? 
-          info.admin !== 1 ? _side[0].children.filter(i=>!i.admin):
+          (info && info.admin !== 1) ? _side[0].children.filter(i=>!i.admin):
           _side[0].children : [])
         }
       },

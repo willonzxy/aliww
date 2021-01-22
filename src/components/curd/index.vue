@@ -120,16 +120,32 @@ export default {
         }
     },
     watch:{
-        config:{
+        'config.api':{
+            // deep:true,
+            immediate:true,
+            handler(){
+                console.log('config api change')
+                // this.addFormConfig = this.handleAddFormConfig()
+                // this.tableConfig = this.handleTableConfig()
+                this.api && this.getTableData();
+            }
+        },
+        'config.addFormConfig':{
             deep:true,
             immediate:true,
             handler(){
-                console.log('config change')
+                console.log('config.addFormConfig')
                 this.addFormConfig = this.handleAddFormConfig()
-                this.tableConfig = this.handleTableConfig()
-                this.api && this.getTableData();
             }
-        }
+        },
+        'config.tableConfig':{
+            deep:true,
+            immediate:true,
+            handler(){
+                console.log('config.tableConfig')
+                this.tableConfig = this.handleTableConfig()
+            }
+        },
     },
     computed:{
         api(){
