@@ -8,19 +8,19 @@ export default {
   },
   mounted () {
     // 绑定搜索功能快捷键 [ 打开 ]
-    hotkeys(this.searchHotkey.open, event => {
-      event.preventDefault()
-      this.searchPanelOpen()
-    })
-    // 绑定搜索功能快捷键 [ 关闭 ]
-    hotkeys(this.searchHotkey.close, event => {
-      event.preventDefault()
-      this.searchPanelClose()
-    })
+    // hotkeys(this.searchHotkey.open, event => {
+    //   event.preventDefault()
+    //   this.searchPanelOpen()
+    // })
+    // // 绑定搜索功能快捷键 [ 关闭 ]
+    // hotkeys(this.searchHotkey.close, event => {
+    //   event.preventDefault()
+    //   this.searchPanelClose()
+    // })
   },
   beforeDestroy () {
-    hotkeys.unbind(this.searchHotkey.open)
-    hotkeys.unbind(this.searchHotkey.close)
+    // hotkeys.unbind(this.searchHotkey.open)
+    // hotkeys.unbind(this.searchHotkey.close)
   },
   computed: {
     ...mapState('d2admin', {

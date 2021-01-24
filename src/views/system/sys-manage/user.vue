@@ -71,6 +71,10 @@ export default {
                         key:'account',
                         title:'账号',
                     },
+                    {
+                        key:'admin',
+                        title:'管理员',
+                    },
                     
                 ]
             }

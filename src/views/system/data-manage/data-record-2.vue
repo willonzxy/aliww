@@ -25,6 +25,7 @@ import { deep_clone } from '@/components/curd/util';
 import _fetch from '@/components/curd/util/fetch';
 import { createNamespacedHelpers } from 'vuex';
 const { mapGetters } = createNamespacedHelpers('d2admin/user')
+import hotkeys from 'hotkeys-js'
 export default {
     name:'DataRecord2',
     components:{
@@ -181,7 +182,58 @@ export default {
                 //         },
                 //     ]
                 // },
-                
+                addFormConfig:{
+                    disRender:true,
+                    btn_group_center:'center',
+                    'label-width':'100px',
+                    inline:false,
+                    actions:['submit','reset'],
+                    formConfig:[
+                        { attr:'userId',type:'lazy-select',label:'放单人',disabled_on_add:true,api:getUserApi.select.api,dataIndex:'id',show:'name'},
+                        {is_required:true,attr:'storeId',type:'select',label:'店铺名',
+                        placeholder:'支持键入搜索',
+                        show:'name',dataIndex:'id',
+                        remote:true,
+                        async remoteMethod(qstring){
+                            let res = await _fetch(`${getStoreApi.select.api}?name=${qstring}`)
+                            let index = that.config.addFormConfig.formConfig.findIndex(i=>i.attr === 'storeId')
+                            let config = deep_clone(that.config.addFormConfig.formConfig[index]);
+                            config.data = res.data;
+                            that.config.addFormConfig.formConfig.splice(index,1,config)
+                        },
+                            async onbeforeupdate(val,obj){
+                                let res = await _fetch(`${getStoreApi.select.api}?id=${val}`)
+                               //console.log(res)
+                                return res.data[0].name;
+                            }
+                        },
+                        { is_required:true,attr:'orderId',type:'input',label:'订单号'},
+                        { is_required:true,attr:'wangwangId',type:'input',label:'旺旺号'},
+                        // { attr:'principleA',type:'number-input',label:'本金最小值',min:0,
+                        //     change(val){
+                        //         let principleB_desc = this.formConfig.filter(i => i.attr === 'principleB')[0];
+                        //         principleB_desc.min = val;
+                        //         if(this.formInline.principleB < val){
+                        //             this.formInline.principleB = val;
+                        //         }
+                        //     }
+                        // },
+                        { is_required:true,attr:'principle',type:'number-input',label:'本金',min:0},
+                        // { attr:'commissionA',type:'number-input',label:'佣金最大值',min:0,
+                        //     change(val){
+                        //         let commissionB = this.formConfig.filter(i => i.attr === 'commissionB')[0];
+                        //         commissionB.min = val;
+                        //         if(this.formInline.commissionB < val){
+                        //             this.formInline.commissionB = val;
+                        //         }
+                        //     }
+                        // },
+                        { is_required:true,attr:'commission',type:'number-input',label:'佣金',min:0},
+                        { is_required:true,attr:'weChatId',type:'input',label:'微信号'},
+                        { attr:'black',type:'radio',label:'黑名单',param_type:'number',data:[{value:1,label:'是'},{value:0,label:'否'}]},
+                        { attr:'memo',type:'textarea',label:'备注'},
+                    ]
+                },
                 tableConfig:[
                     // {
                     //     key:'id',
@@ -346,8 +398,18 @@ export default {
                 item[attr] = raw[j]
             }
             return item;
-        }
-    }
+        },
+        
+    },
+    mounted() {
+        hotkeys('enter', event => {
+            event.preventDefault()
+            this.submit()
+        })
+    },
+    beforeDestroy () {
+        hotkeys.unbind('enter')
+    },
 }
 </script>
 <style>

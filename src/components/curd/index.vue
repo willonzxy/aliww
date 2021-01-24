@@ -395,7 +395,7 @@ export default {
             // this.$nextTick(()=>{
                 
             // })
-            setTimeout(()=>{
+            setTimeout(async ()=>{
                 let temp = {};
                 // let attrs = this.$refs['form'].attrs;
                 for(let k in entity){
@@ -414,7 +414,7 @@ export default {
                     //     widget_desc.disabled = false;
                     //     // widget_desc.can_recovery_selection = false;
                     // }
-                    temp[k] = widget_desc.onbeforeupdate ? widget_desc.onbeforeupdate.call(this.$refs['form'],entity[k],entity) : entity[k]
+                    temp[k] = widget_desc.onbeforeupdate ? await widget_desc.onbeforeupdate.call(this.$refs['form'],entity[k],entity) : entity[k]
                 }
                 let original_form_data = Object.assign({},this.$refs['form'].originalFormInline)
                 let _form_data = recurMerge(original_form_data, temp)
