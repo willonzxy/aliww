@@ -152,12 +152,7 @@ export default {
                             let config = deep_clone(that.config.addFormConfig.formConfig[index]);
                             config.data = res.data;
                             that.config.addFormConfig.formConfig.splice(index,1,config)
-                        },
-                        async onbeforeupdate(val,obj){
-                                let res = await _fetch(`${getStoreApi.select.api}?id=${val}`)
-                               //console.log(res)
-                                return res.data[0].name;
-                            }
+                        }
                         },
                         { is_required:true,attr:'orderId',type:'input',label:'订单号'},
                         { is_required:true,attr:'wangwangId',type:'input',label:'旺旺号'},
@@ -323,4 +318,11 @@ export default {
     .red{
         color:red;
     }
+    /* async onbeforeupdate(val,obj){
+                                let res = await _fetch(`${getStoreApi.select.api}?id=${val}`)
+                               //console.log(res)
+                                that.config.addFormConfig.formConfig.splice(0,1,res.data)
+                                return res.data[0].id;
+                            }
+                        } */
 </style>
