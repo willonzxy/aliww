@@ -84,8 +84,8 @@ export default {
                             let index = that.config.addFormConfig.formConfig.findIndex(i=>i.attr === 'storeId')
                             let config = deep_clone(that.config.addFormConfig.formConfig[index]);
                             config.data = res.data;
-                            //that.$refs['curd'].$refs['form'].formConfig.splice(index,1,config)
-                            that.config.addFormConfig.formConfig.splice(index,1,config)
+                            that.$refs['curd'].$refs['form'].formConfig.splice(index,1,config)
+                            // that.config.addFormConfig.formConfig.splice(index,1,config)
                         }},
                        // {attr:'storeName',type:'input',label:'店铺名'},
                         { attr:'principleA',type:'input-number',label:'本金最小值',

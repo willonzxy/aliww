@@ -151,7 +151,8 @@ export default {
                             let index = that.config.addFormConfig.formConfig.findIndex(i=>i.attr === 'storeId')
                             let config = deep_clone(that.config.addFormConfig.formConfig[index]);
                             config.data = res.data;
-                            that.config.addFormConfig.formConfig.splice(index,1,config)
+                            // that.config.addFormConfig.formConfig.splice(index,1,config)
+                            that.$refs['curd'].$refs['form'].formConfig.splice(index,1,config)
                         }
                         },
                         { is_required:true,attr:'orderId',type:'input',label:'订单号'},
